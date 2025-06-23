@@ -10,7 +10,7 @@
     ]]></description>
     <depends>com.intellij.modules.platform</depends>
     <depends>com.intellij.modules.lang</depends>
-
+    <depends>IdeaVIM</depends>
     <extensions defaultExtensionNs="com.intellij">
 <!--    <projectService serviceImplementation="ss.ssss" />-->
         <postStartupActivity implementation="ss.ssss"/>

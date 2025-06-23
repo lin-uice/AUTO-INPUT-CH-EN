@@ -1,7 +1,9 @@
+import nl.adaptivity.xmlutil.util.impl.createDocument
+import org.gradle.internal.declarativedsl.dom.resolution.documentWithResolution
+
 plugins {
     id("java")
     id("org.jetbrains.kotlin.jvm") version "2.1.0"
-//    id("org.jetbrains.intellij") version
     id("org.jetbrains.intellij.platform") version "2.5.0"
 }
 
@@ -15,18 +17,26 @@ repositories {
     }
 }
 
+val platformPlugins: String by project
 // Configure Gradle IntelliJ Plugin
-// Read more: https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin.html
 dependencies {
+    implementation("com.maddyhome.idea:ideavim:2.23.0")
+
     intellijPlatform {
         create("IC", "2025.1")
         testFramework(org.jetbrains.intellij.platform.gradle.TestFrameworkType.Platform)
-
-        // Add necessary plugin dependencies for compilation here, example:
-        // bundledPlugin("com.intellij.java")
+        bundledPlugins(providers.gradleProperty("platformBundledPlugins").map { it.split(',') })
+        plugins(providers.gradleProperty("platformPlugins").map { it.split(',') })
+//        plugins(providers.gradleProperty("platformPlugins").map { it.split(',') })
+//        bundledPlugin("IdeaVIM")
     }
 }
-
+idea{
+    module{
+        isDownloadJavadoc = true
+        isDownloadSources = true
+    }
+}
 intellijPlatform {
     pluginConfiguration {
         ideaVersion {
@@ -49,13 +59,4 @@ tasks {
         kotlinOptions.jvmTarget = "21"
     }
 }
-//patchPluginXml {
-//    changeNotes """
-//      <![CDATA[
-//      插件开发学习功能点<br>
-//      <em>1. 工程搭建</em>
-//      <em>2. 菜单读取</em>
-//      <em>3. 获取配置</em>
-//      <em>4. 回显页面</em>
-//    ]]>"""
-//}
+

@@ -22,11 +22,20 @@ import java.awt.event.MouseEvent;
 public class CursorCommentDetector implements CaretListener, EditorMouseListener, EditorMouseMotionListener {
 
     private boolean isCursorInContentArea = false;
-
+    static VimModeChecker vimModeChecker;
     @Override
     public void caretPositionChanged(@NotNull CaretEvent e) {
         checkAndPrint(e.getEditor());
     }
+
+    // 在 CursorCommentDetector.java 中添加这个静态方法
+    public static void installGlobalMouseListener(Project project,Editor editor) {
+        System.out.println("CursorCommentDetector!!!!!");
+        GlobalMouseTracker.installFor(project);
+        vimModeChecker = new VimModeChecker(editor);
+
+    }
+
 
     @Override
     public void mouseMoved(EditorMouseEvent event) {
@@ -70,8 +79,16 @@ public class CursorCommentDetector implements CaretListener, EditorMouseListener
         PsiElement elementAtCaret = psiFile.findElementAt(offset);
 
         String result;
+        System.out.println("现在是vim模式吗"+vimModeChecker.isInsertMode());
         if (!isCursorInContentArea) {
-            result = "Cursor is in the editor but outside of code area.";
+
+            if(GlobalMouseTracker.isMouseInIdeaWindow()){
+                result = "Cursor is in the editor but outside of code area.";
+            }
+            else {
+                result = "Cursor is outside";
+            }
+//            result = "Cursor is in the editor but outside of code area.";
         } else if (elementAtCaret == null || PsiTreeUtil.getParentOfType(elementAtCaret, PsiComment.class) != null) {
             result = "Cursor is in a comment.";
         } else {
@@ -82,7 +99,15 @@ public class CursorCommentDetector implements CaretListener, EditorMouseListener
     }
 
     // 必须实现的 EditorMouseListener 接口方法（可以留空）
-    @Override public void mouseClicked(EditorMouseEvent event) {}
-    @Override public void mousePressed(EditorMouseEvent event) {}
-    @Override public void mouseReleased(EditorMouseEvent event) {}
+    @Override
+    public void mouseClicked(EditorMouseEvent event) {
+    }
+
+    @Override
+    public void mousePressed(EditorMouseEvent event) {
+    }
+
+    @Override
+    public void mouseReleased(EditorMouseEvent event) {
+    }
 }
