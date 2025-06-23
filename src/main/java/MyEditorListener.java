@@ -10,9 +10,14 @@ public class MyEditorListener implements EditorFactoryListener {
     @Override
     public void editorCreated(@NotNull EditorFactoryEvent event) {
 
-       Editor editor = event.getEditor();
-       Project project = editor.getProject();
-       editor.getCaretModel().addCaretListener(new CursorCommentDetector(),project);
+        Editor editor = event.getEditor();
+        Project project = editor.getProject();
+//       editor.getCaretModel().addCaretListener(new CursorCommentDetector(),project);
+        CursorCommentDetector listener = new CursorCommentDetector();
+
+        editor.getCaretModel().addCaretListener(listener, project);
+        editor.addEditorMouseListener(listener,project);
+        editor.addEditorMouseMotionListener(listener,project);
     }
 
     @Override
