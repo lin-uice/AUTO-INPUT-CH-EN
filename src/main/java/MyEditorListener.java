@@ -1,4 +1,4 @@
-import Listener.CursorCommentDetector;
+//import Listener.CursorCommentDetector;
 import Listener.CursorCommentDetectorVim;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.event.EditorFactoryEvent;
@@ -32,7 +32,7 @@ public class MyEditorListener implements EditorFactoryListener{
         try {
             //VIm
             Class.forName("com.maddyhome.idea.vim.VimPlugin");
-            CursorCommentDetectorVim listener = new CursorCommentDetectorVim();
+            CursorCommentDetectorVim listener = new CursorCommentDetectorVim(project);
              IjVimInjectorKt.initInjector();
             VimInjector vimInjector = VimInjectorKt.getInjector();
 //            VimListenerManager.INSTANCE.
@@ -50,18 +50,20 @@ public class MyEditorListener implements EditorFactoryListener{
             editor.getCaretModel().addCaretListener(listener, project);
             editor.addEditorMouseListener(listener, project);
             editor.addEditorMouseMotionListener(listener, project);
-
+//            editor.add
+            System.out.println("Vim插件已经启用了!!");
         } catch (ClassNotFoundException e) {
-            CursorCommentDetector listener = new CursorCommentDetector();
-
-            editor.getCaretModel().addCaretListener(listener, project);
-            editor.addEditorMouseListener(listener, project);
-            editor.addEditorMouseMotionListener(listener, project);
-            if (!globalMouseListenerInstalled) {
-                System.out.println("🔌 正在安装全局鼠标监听器...");
-                CursorCommentDetector.installGlobalMouseListener(project, editor);  // ✅ 调用静态方法
-                globalMouseListenerInstalled = true;
-            }
+            System.out.println("未找到Vim插件，正在使用普通模式");
+//            CursorCommentDetector listener = new CursorCommentDetector();
+//
+//            editor.getCaretModel().addCaretListener(listener, project);
+//            editor.addEditorMouseListener(listener, project);
+//            editor.addEditorMouseMotionListener(listener, project);
+//            if (!globalMouseListenerInstalled) {
+//                System.out.println("🔌 正在安装全局鼠标监听器...");
+//                CursorCommentDetector.installGlobalMouseListener(project, editor);  // ✅ 调用静态方法
+//                globalMouseListenerInstalled = true;
+//            }
 
         }
     }

@@ -21,8 +21,8 @@ val platformPlugins: String by project
 // Configure Gradle IntelliJ Plugin
 dependencies {
     implementation("com.maddyhome.idea:ideavim:2.23.0")
-    implementation("net.java.dev.jna:jna:5.17.0")
-    implementation("net.java.dev.jna:jna-platform:5.17.0")
+//    implementation("net.java.dev.jna:jna:5.17.0")
+//    implementation("net.java.dev.jna:jna-platform:5.17.0")
 
     intellijPlatform {
         create("IC", "2025.1")

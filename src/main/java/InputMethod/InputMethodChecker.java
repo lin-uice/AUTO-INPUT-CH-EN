@@ -1,6 +1,10 @@
 package InputMethod;
 
 import ENUM.InputState;
+//import com.intellij.jna.JnaLoader;
+//import com.intellij.jna.JnaLoader;
+//import com.intellij.jna.JnaLoader;
+import com.intellij.openapi.application.ApplicationManager;
 import com.sun.jna.Library;
 import com.sun.jna.Native;
 import com.sun.jna.Pointer;
@@ -12,9 +16,27 @@ import com.sun.jna.win32.W32APIOptions;
 import static com.sun.jna.platform.win32.WinUser.KEYBDINPUT.KEYEVENTF_KEYUP;
 import static com.sun.jna.platform.win32.WinUser.VK_LSHIFT;
 
+import com.intellij.openapi.diagnostic.Logger;
+
 //支持搜狗，微软，百度输入法
 public class InputMethodChecker {
+    private static long lastPressTime = 0;
+    private static final long MIN_PRESS_INTERVAL_MS = 100; // 设置最小间隔为500毫秒
+    static Logger logger = Logger.getInstance(InputMethodChecker.class);
 
+    static {
+        try {
+            Native.load("imm32", Imm32.class);
+            System.out.println("imm加载成功!!!!!!");
+        } catch (Exception e) {
+            System.out.println("imm加载失败");
+        }
+//        JnaLoader.load(logger);
+////        JnaLoader.load
+//        System.out.println("Jna加载了吗"+JnaLoader.isLoaded());
+//       System.out.println("InputMethodChecker!!!!!");
+//        System.out.println("InputMethodChecker!!!!!");
+    }
 
     // Imm32.dll 接口：用于获取输入法窗口句柄
     public interface Imm32 extends Library {
@@ -25,8 +47,10 @@ public class InputMethodChecker {
         // 参数: hWnd - 应用程序窗口句柄
         // 返回值: 默认 IME 窗口的句
         Pointer ImmGetDefaultIMEWnd(Pointer hWnd);
+
         //释放窗口
         Pointer ImmGetContext(HWND hWnd);
+
         boolean ImmReleaseContext(HWND hWnd, Pointer hIMC);
 
     }
@@ -54,8 +78,9 @@ public class InputMethodChecker {
 
     private static final int WM_IME_CONTROL = 0x0283;
     private static final int IMC_GETOPENSTATUS = 0x0001;
-    public static InputState GetMode(){
-        return isEnglishMode()?InputState.ENGLISH:InputState.CHINESE;
+
+    public static InputState GetMode() {
+        return isEnglishMode() ? InputState.ENGLISH : InputState.CHINESE;
     }
 
     /**
@@ -84,9 +109,6 @@ public class InputMethodChecker {
             }
 
 
-
-
-
             // 发送 IMC_GETOPENSTATUS 查询输入法是否打开
             long result = user32.SendMessage(new HWND(imeWnd), WM_IME_CONTROL, IMC_GETOPENSTATUS, 0);
             //执行结束,释放上下文
@@ -98,20 +120,30 @@ public class InputMethodChecker {
             //
             return result == 0;
         } catch (Exception e) {
-            e.printStackTrace();
+//            e.printStackTrace();
+            System.out.println("获取输入法异常");
             return false;
         }
     }
+
     public static void pressShift() {
+        long now = System.currentTimeMillis();
+        if (now - lastPressTime < MIN_PRESS_INTERVAL_MS) {
+            // 如果距离上次按下的时间小于500毫秒，则跳过本次操作
+            return;
+        }
         User32 user32 = User32.INSTANCE;
 
-        // 按下 Shift
+        // 按下左 Shift
         user32.keybd_event((byte) VK_LSHIFT, (byte) 0, 0, 0);
         System.out.println("按下 Shift");
 
-        // 释放 Shift
+
+        // 释放左 Shift
         user32.keybd_event((byte) VK_LSHIFT, (byte) 0, KEYEVENTF_KEYUP, 0);
         System.out.println("释放 Shift");
+        lastPressTime = now;
+
     }
 
 
