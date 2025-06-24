@@ -1,31 +1,47 @@
 package Listener;
 
+import ENUM.CursorState;
+import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.editor.event.CaretEvent;
+import com.intellij.openapi.editor.event.CaretListener;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.LogicalPosition;
-import com.intellij.openapi.editor.event.*;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiComment;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiTreeUtil;
+import com.intellij.psi.PsiComment;
+import com.maddyhome.idea.vim.api.VimEditor;
+import com.maddyhome.idea.vim.common.ModeChangeListener;
+import com.maddyhome.idea.vim.listener.VimListenerManager;
+import com.maddyhome.idea.vim.newapi.IjVimEditorKt;
+import com.maddyhome.idea.vim.state.mode.Mode;
 import org.jetbrains.annotations.NotNull;
+import com.intellij.openapi.editor.event.EditorMouseListener;
+import com.intellij.openapi.editor.event.EditorMouseMotionListener;
+import com.intellij.openapi.editor.event.EditorMouseEvent;
+//import com.intellij.idea.vim.common
 
 import java.awt.event.MouseEvent;
 
-public class CursorCommentDetector implements CaretListener, EditorMouseListener, EditorMouseMotionListener {
-
+public class CursorCommentDetectorVim implements CaretListener, EditorMouseListener, EditorMouseMotionListener, ModeChangeListener {
+    CursorState cursorState = CursorState.OUTEDITOR;
+    private Logger LOG = Logger.getInstance(CursorCommentDetectorVim.class);
     private boolean isCursorInContentArea = false;
+    static VimModeChecker vimModeChecker;
     @Override
     public void caretPositionChanged(@NotNull CaretEvent e) {
         checkAndPrint(e.getEditor());
     }
 
+
     // 在 CursorCommentDetector.java 中添加这个静态方法
     public static void installGlobalMouseListener(Project project,Editor editor) {
         System.out.println("CursorCommentDetector!!!!!");
         GlobalMouseTracker.installFor(project);
+        vimModeChecker = new VimModeChecker(editor);
 
     }
 
@@ -72,6 +88,7 @@ public class CursorCommentDetector implements CaretListener, EditorMouseListener
         PsiElement elementAtCaret = psiFile.findElementAt(offset);
 
         String result;
+//        System.out.println("现在是插入吗"+vimModeChecker.isInsertMode());
         if (!isCursorInContentArea) {
 
             if(GlobalMouseTracker.isMouseInIdeaWindow()){
@@ -101,5 +118,18 @@ public class CursorCommentDetector implements CaretListener, EditorMouseListener
 
     @Override
     public void mouseReleased(EditorMouseEvent event) {
+    }
+
+    @Override
+    public void modeChanged(@NotNull VimEditor vimEditor, @NotNull Mode mode) {
+        System.out.println("modeChanged"+"hhhhhhhhhh");
+        System.out.println("modeChanged"+"hhhhhhhhhh");
+        System.out.println("modeChanged"+"hhhhhhhhhh");
+        LOG.warn("VimModechanged: isInsertMode"+vimModeChecker.isInsertMode());
+
+
+        Editor editor = IjVimEditorKt.getIj(vimEditor);
+
+        checkAndPrint(editor);
     }
 }

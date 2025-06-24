@@ -25,7 +25,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import org.jetbrains.annotations.NotNull;
 
 //@Slf4j
-public class VimModeChecker implements ModeChangeListener {
+public class VimModeChecker  {
     private static final Logger LOG = Logger.getInstance(VimModeChecker.class);
     private Editor editor;
 //    private final VimKeyListener keyListener;
@@ -50,7 +50,7 @@ public class VimModeChecker implements ModeChangeListener {
         VimEditor vimEditor = IjVimEditorKt.getVim(editor);
         Mode mode = vimEditor.getMode();
 //        Log.INFO("hello");
-        LOG.info("VimModeChecker: isInsertMode" + mode);
+//        LOG.info("VimModeChecker: isInsertMode" + mode);
 
         return mode instanceof Mode.INSERT;
 
@@ -67,8 +67,5 @@ public class VimModeChecker implements ModeChangeListener {
     }
 
 
-    @Override
-    public void modeChanged(@NotNull VimEditor vimEditor, @NotNull Mode mode) {
 
-    }
 }
