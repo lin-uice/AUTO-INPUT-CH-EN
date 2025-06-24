@@ -30,29 +30,27 @@ public class MyEditorListener implements EditorFactoryListener{
 //        VimModeChecker vimModeChecker = new VimModeChecker(editor);
 //       editor.getCaretModel().addCaretListener(new CursorCommentDetector(),project);
         try {
+            //VIm
             Class.forName("com.maddyhome.idea.vim.VimPlugin");
             CursorCommentDetectorVim listener = new CursorCommentDetectorVim();
-//        CursorCommentDetector.installGlobalMouseListener();
-//        vimModeChecker.isInsertMode();
-//        vimModeChecker.isInsertMode(editor);
-            editor.getCaretModel().addCaretListener(listener, project);
-            editor.addEditorMouseListener(listener, project);
-            editor.addEditorMouseMotionListener(listener, project);
-            IjVimInjectorKt.initInjector();
+             IjVimInjectorKt.initInjector();
             VimInjector vimInjector = VimInjectorKt.getInjector();
 //            VimListenerManager.INSTANCE.
             VimListenersNotifier listenersNotifier = vimInjector.getListenersNotifier();
             listenersNotifier.getModeChangeListeners().add(listener);
-//            VimListenersNotifier listenersNotifier=injector.listenersNotifier;
-//            listenersNotifier.getModeChangeListeners().add(listener);
-//            listenersNotifier.notifyModeChanged(editor, Mode.NORMAL);
-
 
             if (!globalMouseListenerInstalled) {
                 System.out.println("🔌 正在安装全局鼠标监听器...");
                 CursorCommentDetectorVim.installGlobalMouseListener(project, editor);  // ✅ 调用静态方法
                 globalMouseListenerInstalled = true;
             }
+//        CursorCommentDetector.installGlobalMouseListener();
+//        vimModeChecker.isInsertMode();
+//        vimModeChecker.isInsertMode(editor);
+            editor.getCaretModel().addCaretListener(listener, project);
+            editor.addEditorMouseListener(listener, project);
+            editor.addEditorMouseMotionListener(listener, project);
+
         } catch (ClassNotFoundException e) {
             CursorCommentDetector listener = new CursorCommentDetector();
 

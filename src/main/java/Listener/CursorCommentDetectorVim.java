@@ -1,6 +1,7 @@
 package Listener;
 
 import ENUM.CursorState;
+import InputMethod.InputMethodChecker;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.event.CaretEvent;
 import com.intellij.openapi.editor.event.CaretListener;
@@ -13,6 +14,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.PsiComment;
+import com.intellij.jna.JnaLoader;
 import com.maddyhome.idea.vim.api.VimEditor;
 import com.maddyhome.idea.vim.common.ModeChangeListener;
 import com.maddyhome.idea.vim.listener.VimListenerManager;
@@ -31,6 +33,10 @@ public class CursorCommentDetectorVim implements CaretListener, EditorMouseListe
     private Logger LOG = Logger.getInstance(CursorCommentDetectorVim.class);
     private boolean isCursorInContentArea = false;
     static VimModeChecker vimModeChecker;
+//    static InputMethodChecker inputMethodChecker;
+//    static{
+//        inputMethodChecker=new InputMethodChecker();
+//    }
     @Override
     public void caretPositionChanged(@NotNull CaretEvent e) {
         checkAndPrint(e.getEditor());
@@ -42,6 +48,7 @@ public class CursorCommentDetectorVim implements CaretListener, EditorMouseListe
         System.out.println("CursorCommentDetector!!!!!");
         GlobalMouseTracker.installFor(project);
         vimModeChecker = new VimModeChecker(editor);
+
 
     }
 
@@ -88,22 +95,43 @@ public class CursorCommentDetectorVim implements CaretListener, EditorMouseListe
         PsiElement elementAtCaret = psiFile.findElementAt(offset);
 
         String result;
+        CursorState newCursorState;
 //        System.out.println("现在是插入吗"+vimModeChecker.isInsertMode());
         if (!isCursorInContentArea) {
 
             if(GlobalMouseTracker.isMouseInIdeaWindow()){
+                newCursorState = CursorState.OUTIDE;
                 result = "Cursor is in the editor but outside of code area.";
             }
             else {
+                newCursorState=CursorState.OUTEDITOR;
                 result = "Cursor is outside";
             }
 //            result = "Cursor is in the editor but outside of code area.";
         } else if (elementAtCaret == null || PsiTreeUtil.getParentOfType(elementAtCaret, PsiComment.class) != null) {
+            newCursorState = CursorState.INCOMMENT;
             result = "Cursor is in a comment.";
         } else {
+            newCursorState = CursorState.INCODE;
             result = "Cursor is in code.";
         }
-
+        if(newCursorState.equals(cursorState)){
+            //不做任何操作
+        }
+        else {
+            cursorState = newCursorState;
+            if(cursorState.getLanguage().equals(InputMethodChecker.GetMode()))
+            {//如果状态相等,就不需要进行切换输入法.
+                 }
+            else {
+                InputMethodChecker.pressShift();
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
         System.out.println(result);
     }
 
@@ -122,10 +150,10 @@ public class CursorCommentDetectorVim implements CaretListener, EditorMouseListe
 
     @Override
     public void modeChanged(@NotNull VimEditor vimEditor, @NotNull Mode mode) {
-        System.out.println("modeChanged"+"hhhhhhhhhh");
-        System.out.println("modeChanged"+"hhhhhhhhhh");
-        System.out.println("modeChanged"+"hhhhhhhhhh");
-        LOG.warn("VimModechanged: isInsertMode"+vimModeChecker.isInsertMode());
+//        System.out.println("modeChanged"+"hhhhhhhhhh");
+//        System.out.println("modeChanged"+"hhhhhhhhhh");
+//        System.out.println("modeChanged"+"hhhhhhhhhh");
+//        LOG.warn("VimModechanged: isInsertMode"+vimModeChecker.isInsertMode());
 
 
         Editor editor = IjVimEditorKt.getIj(vimEditor);
