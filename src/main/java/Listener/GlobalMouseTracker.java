@@ -27,8 +27,6 @@ public class GlobalMouseTracker {
     }
     private static boolean installed = false;
     public static void installFor(Project project) {
-//        static boolean installed = false;
-//        System.out.println("GlobalMouseTracker: installFor");
         if (installed) return;
         new GlobalMouseTracker(project);
         installed = true;

@@ -1,24 +1,23 @@
 //import Listener.CursorCommentDetector;
+
 import Listener.CursorCommentDetectorVim;
+//import Listener.test.AutoFocusTracker;
+import Listener.test.EditorFocusTracker;
+import com.intellij.openapi.application.ApplicationActivationListener;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.event.EditorFactoryEvent;
 import com.intellij.openapi.editor.event.EditorFactoryListener;
 import com.intellij.openapi.project.Project;
-import com.maddyhome.idea.vim.VimPlugin;
-import com.maddyhome.idea.vim.api.VimEditor;
 import com.maddyhome.idea.vim.api.VimInjectorKt;
-import com.maddyhome.idea.vim.common.ModeChangeListener;
 import com.maddyhome.idea.vim.common.VimListenersNotifier;
-import com.maddyhome.idea.vim.common.VimPluginListener;
-import com.maddyhome.idea.vim.listener.VimListenerManager;
 import com.maddyhome.idea.vim.newapi.IjVimInjectorKt;
-import com.maddyhome.idea.vim.state.mode.Mode;
 import org.jetbrains.annotations.NotNull;
 import com.maddyhome.idea.vim.api.VimInjector;
 //import com.maddyhome.idea.vim.listener.VimListenerManager.
-import java.awt.*;
 
-public class MyEditorListener implements EditorFactoryListener{
+
+public class MyEditorListener implements EditorFactoryListener {
     private static boolean globalMouseListenerInstalled = false;
 
     @Override
@@ -33,7 +32,7 @@ public class MyEditorListener implements EditorFactoryListener{
             //VIm
             Class.forName("com.maddyhome.idea.vim.VimPlugin");
             CursorCommentDetectorVim listener = new CursorCommentDetectorVim(project);
-             IjVimInjectorKt.initInjector();
+            IjVimInjectorKt.initInjector();
             VimInjector vimInjector = VimInjectorKt.getInjector();
 //            VimListenerManager.INSTANCE.
             VimListenersNotifier listenersNotifier = vimInjector.getListenersNotifier();
@@ -47,11 +46,29 @@ public class MyEditorListener implements EditorFactoryListener{
 //        CursorCommentDetector.installGlobalMouseListener();
 //        vimModeChecker.isInsertMode();
 //        vimModeChecker.isInsertMode(editor);
+//            CursorCommentDetectorVim.testttt( editor);
             editor.getCaretModel().addCaretListener(listener, project);
             editor.addEditorMouseListener(listener, project);
             editor.addEditorMouseMotionListener(listener, project);
-//            editor.add
+            ApplicationManager.getApplication().getMessageBus().connect().subscribe(ApplicationActivationListener.TOPIC,listener);
             System.out.println("Vim插件已经启用了!!");
+            //焦点监测
+//            AutoFocusTracker autoFocusTracker = new AutoFocusTracker(project);
+            EditorFocusTracker.addFocusListener(project, hasFocus -> {
+                if (hasFocus) {
+//                    CursorCommentDetectorVim.INIDEOUTEDITOR = true;
+                    CursorCommentDetectorVim.OUTEDITOR = false;
+                     System.out.println("获得了注意"); // 比如启用光标监听这个时候,其实不进行操作
+                } else {
+                    System.out.println("失去了注意");
+                    CursorCommentDetectorVim.OUTEDITOR = true;
+                    listener.chekOutEditor();
+                    //需要监听状态.
+
+                }
+            });
+
+
         } catch (ClassNotFoundException e) {
             System.out.println("未找到Vim插件，正在使用普通模式");
 //            CursorCommentDetector listener = new CursorCommentDetector();
@@ -73,7 +90,6 @@ public class MyEditorListener implements EditorFactoryListener{
 //        Editor editor = event.getEditor();
 //        editor.getCaretModel().); // 可选清理
     }
-
 
 
     //注册VIM

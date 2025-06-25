@@ -2,26 +2,19 @@ package Listener;
 
 import ENUM.CursorState;
 import InputMethod.InputMethodChecker;
+import Listener.test.EditorFocusTracker;
+import com.intellij.openapi.application.ApplicationActivationListener;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.CaretModel;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.event.CaretEvent;
 import com.intellij.openapi.editor.event.CaretListener;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.LogicalPosition;
-import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.PsiDocumentManager;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.psi.PsiComment;
-import com.intellij.jna.JnaLoader;
+import com.intellij.openapi.wm.IdeFrame;
 import com.maddyhome.idea.vim.api.VimEditor;
 import com.maddyhome.idea.vim.common.ModeChangeListener;
-import com.maddyhome.idea.vim.listener.VimListenerManager;
 import com.maddyhome.idea.vim.newapi.IjVimEditorKt;
 import com.maddyhome.idea.vim.state.mode.Mode;
 import org.jetbrains.annotations.NotNull;
@@ -30,16 +23,15 @@ import com.intellij.openapi.editor.event.EditorMouseMotionListener;
 import com.intellij.openapi.editor.event.EditorMouseEvent;
 //import com.intellij.idea.vim.common
 
-import java.awt.*;
-import java.awt.event.MouseEvent;
 
-public class CursorCommentDetectorVim extends GlobalMouseTracker implements CaretListener, EditorMouseListener, EditorMouseMotionListener, ModeChangeListener {
+public class CursorCommentDetectorVim extends GlobalMouseTracker implements CaretListener, EditorMouseListener, EditorMouseMotionListener, ModeChangeListener, ApplicationActivationListener {
     //
-    CursorState cursorState = CursorState.OUTEDITOR;
+    static CursorState cursorState = CursorState.INCODE;
     private Logger LOG = Logger.getInstance(CursorCommentDetectorVim.class);
     private boolean isCursorInContentArea = false;
     static VimModeChecker vimModeChecker;
     static InputMethodChecker inputMethodChecker;
+    public static EditorFocusTracker editorFocusTracker = new EditorFocusTracker();
 
     static {
         inputMethodChecker = new InputMethodChecker();
@@ -47,53 +39,53 @@ public class CursorCommentDetectorVim extends GlobalMouseTracker implements Care
 
     public CursorCommentDetectorVim(Project project) {
         super(project);
-        WindowsListener();
-    }
-
-    @Override
-    public void WindowsListener() {
-        if (ideaWindow == null) {
-            System.err.println("❌ GlobalMouseTracker: Failed to get IDEA window.");
-            return;
-        }
-
-//        System.out.println("✅ GlobalMouseTracker: Successfully registered for window: " + ideaWindow.getName());
-
-        Toolkit.getDefaultToolkit().addAWTEventListener(event -> {
-//            System.out.println("💡 捕获到 AWT 事件: " + event);
-
-            if (event instanceof MouseEvent mouseEvent) {
-                Point mousePoint = MouseInfo.getPointerInfo().getLocation();
-                Rectangle windowBounds = ideaWindow.getBounds();
-                boolean isInsideIdeaWindow = windowBounds.contains(mousePoint);
-//                checkAndPrint();
-//                System.out.println("🖱️ 鼠标位置: " + mousePoint);
-//                System.out.println("📐 IDEA 窗口范围: " + windowBounds);
-                //进入,改为英文.退出,改为中文.
-                CursorState newCursorState = CursorState.INCODE;
-                if (mouseEvent.getID() == MouseEvent.MOUSE_EXITED) {
-                    isMouseInIdeaWindow = false;//判断是否在idea内
-                    newCursorState = CursorState.OUTIDE;
-                    System.out.println("【全局】鼠标已完全离开 IntelliJ IDEA 窗口");
-                } else if (mouseEvent.getID() == MouseEvent.MOUSE_ENTERED) {
-                    isMouseInIdeaWindow = true;
-                    newCursorState = CursorState.INCODE;
-                    System.out.println("【全局】鼠标重新进入 IntelliJ IDEA 窗口");
-                }
-//                System.out.println("【全局】当前输入法状态为：" + newCursorState);
-//                System.out.println("【全局】旧的输入法状态为：" + cursorState);
-//                if (!newCursorState.equals(cursorState))
-                if (!cursorState.getLanguage().equals(InputMethodChecker.GetMode())) {
-//                        inputMethodChecker.pressShift();
-                }
-//                cursorState = newCursorState;
-
-
-            }
-        }, AWTEvent.MOUSE_EVENT_MASK | AWTEvent.MOUSE_MOTION_EVENT_MASK);
+//        WindowsListener();
     }
 
 
+//    @Override
+//    public void WindowsListener() {
+//        if (ideaWindow == null) {
+//            System.err.println("❌ GlobalMouseTracker: Failed to get IDEA window.");
+//            return;
+//        }
+//
+////        System.out.println("✅ GlobalMouseTracker: Successfully registered for window: " + ideaWindow.getName());
+//
+//        Toolkit.getDefaultToolkit().addAWTEventListener(event -> {
+////            System.out.println("💡 捕获到 AWT 事件: " + event);
+//
+//            if (event instanceof MouseEvent mouseEvent) {
+//                Point mousePoint = MouseInfo.getPointerInfo().getLocation();
+//                Rectangle windowBounds = ideaWindow.getBounds();
+//                boolean isInsideIdeaWindow = windowBounds.contains(mousePoint);
+////                checkAndPrint();
+////                System.out.println("🖱️ 鼠标位置: " + mousePoint);
+////                System.out.println("📐 IDEA 窗口范围: " + windowBounds);
+//                //进入,改为英文.退出,改为中文.
+//                CursorState newCursorState = CursorState.INCODE;
+//                if (mouseEvent.getID() == MouseEvent.MOUSE_EXITED) {
+//                    isMouseInIdeaWindow = false;//判断是否在idea内
+//                    newCursorState = CursorState.OUTIDE;
+//                    System.out.println("【全局】鼠标已完全离开 IntelliJ IDEA 窗口");
+//                } else if (mouseEvent.getID() == MouseEvent.MOUSE_ENTERED) {
+//                    isMouseInIdeaWindow = true;
+//                    newCursorState = CursorState.INCODE;
+//                    System.out.println("【全局】鼠标重新进入 IntelliJ IDEA 窗口");
+//                }
+////                System.out.println("【全局】当前输入法状态为：" + newCursorState);
+////                System.out.println("【全局】旧的输入法状态为：" + cursorState);
+////                if (!newCursorState.equals(cursorState))
+//                if (!cursorState.getLanguage().equals(InputMethodChecker.GetMode())) {
+////                        inputMethodChecker.pressShift();
+//                }
+
+    /// /                cursorState = newCursorState;
+//
+//
+//            }
+//        }, AWTEvent.MOUSE_EVENT_MASK | AWTEvent.MOUSE_MOTION_EVENT_MASK);
+//    }
     @Override
     public void caretPositionChanged(@NotNull CaretEvent e) {
 //        System.out.println("CursorCommentDetector.caretPositionChanged");
@@ -106,6 +98,16 @@ public class CursorCommentDetectorVim extends GlobalMouseTracker implements Care
         System.out.println("CursorCommentDetector!!!!!");
         GlobalMouseTracker.installFor(project);
         vimModeChecker = new VimModeChecker(editor);
+        cursorState = CursorState.INCODE;
+//        CursorState newCursorState;
+        CommentUtils.CommentType commentType = CommentUtils.identifyCommentType(editor);
+        if (commentType != null) {
+            cursorState = CursorState.INCOMMENT;
+//            result = "Cursor is in a comment.";
+        } else {
+            cursorState = CursorState.INCODE;
+//            result = "Cursor is in code.";
+        }
 
 
     }
@@ -118,9 +120,7 @@ public class CursorCommentDetectorVim extends GlobalMouseTracker implements Care
 
     @Override
     public void mouseEntered(EditorMouseEvent event) {
-//        isCursorInContentArea = true;
-//        checkAndPrint(event.getEditor());
-//        System.out.println("Cursor entered the editor content area.");
+
     }
 
     private void checkPrintMode() {
@@ -129,9 +129,6 @@ public class CursorCommentDetectorVim extends GlobalMouseTracker implements Care
 
     @Override
     public void mouseExited(EditorMouseEvent event) {
-//        isCursorInContentArea = false;
-//        checkAndPrint(event.getEditor());
-//        System.out.println("Cursor exited the editor content area.");
     }
 
 
@@ -144,43 +141,27 @@ public class CursorCommentDetectorVim extends GlobalMouseTracker implements Care
 
         String result;
         CursorState newCursorState;
-//        System.out.println("【全局】鼠标已完全离开 IntelliJ IDEA 窗口");
-        if (!isMouseInIdeaWindow) {
-            newCursorState = CursorState.OUTIDE;
-            result = "Cursor is in the editor but outside of code area.";
+        CommentUtils.CommentType commentType = CommentUtils.identifyCommentType(editor);
+        if (commentType != null) {
+            newCursorState = CursorState.INCOMMENT;
         } else {
-//            System.out.println(CommentUtils.identifyCommentType(editor));
-//            printCurrentLine(editor);
-            CommentUtils.CommentType commentType = CommentUtils.identifyCommentType(editor);
-            if (commentType != null) {
-                newCursorState = CursorState.INCOMMENT;
-//            result = "Cursor is in a comment.";
-            } else {
-                newCursorState = CursorState.INCODE;
-//            result = "Cursor is in code.";
-            }
+            newCursorState = CursorState.INCODE;
         }
         System.out.println("旧模式" + cursorState);
         System.out.println("新模式" + newCursorState);
-        System.out.println(InputMethodChecker.GetMode());
-        System.out.println(cursorState.getCode());
+//        System.out.println(InputMethodChecker.GetMode());
+//        System.out.println(cursorState.getCode());
         if (newCursorState.equals(cursorState)) {
             //不做任何操作
 
         } else {
-//            System.out.println("旧模式" + cursorState);
             cursorState = newCursorState;
-
-//            System.out.println("新模式" + newCursorState);
-
-//            System.out.println(CursorState.);
             if (cursorState.getLanguage().equals(InputMethodChecker.GetMode())) {//如果状态相等,就不需要进行切换输入法.
 
             } else {
                 InputMethodChecker.pressShift();
             }
         }
-//        System.out.println(result);
     }
 
     // 测试实现
@@ -220,4 +201,55 @@ public class CursorCommentDetectorVim extends GlobalMouseTracker implements Care
 
         checkAndPrint(editor);
     }
+
+    static boolean OUTIDEA;
+    public static boolean OUTEDITOR;
+
+    @Override
+    public void applicationActivated(IdeFrame ideFrame) {
+        OUTIDEA = false;
+
+
+
+    }
+
+    @Override
+    public void applicationDeactivated(IdeFrame ideFrame) {
+        OUTIDEA = true;
+
+        System.out.println("鼠标已离开IDEA主窗口");
+        CursorState newCursorState = CursorState.OUTIDE;
+        if (!cursorState.equals(newCursorState)) {
+            cursorState = newCursorState;
+            if (!cursorState.getLanguage().equals(InputMethodChecker.GetMode())) {
+                InputMethodChecker.pressShift();
+            }
+
+        }
+
+    }
+
+    public void chekOutEditor() {
+        //这个应该在更新状态后.
+        //现在检测最基本的功能
+        try {
+            Thread.sleep(10);
+        } catch (InterruptedException e) {
+        }
+        if (OUTIDEA == false && OUTEDITOR) {
+
+            System.out.println("当前在IDE内,但是在editor外");
+            CursorState newCursorState = CursorState.INCODE;
+            if (!cursorState.equals(newCursorState)) {
+                cursorState = newCursorState;
+                if (!cursorState.getLanguage().equals(InputMethodChecker.GetMode())) {
+                    InputMethodChecker.pressShift();
+                }
+
+            }
+//
+        }
+    }
+
+
 }
