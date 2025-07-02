@@ -230,10 +230,13 @@ public class CursorCommentDetectorVim extends GlobalMouseTracker implements Care
 
         System.out.println("鼠标已离开IDEA主窗口");
         CursorState newCursorState = CursorState.OUTIDE;
+        System.out.println("之前光标状态为：" + cursorState);
+        System.out.println("现在光标状态为：" + newCursorState);
         if (!cursorState.equals(newCursorState)) {
             cursorState = newCursorState;
             if (!cursorState.getLanguage().equals(InputMethodChecker.GetMode())) {
                 InputMethodChecker.pressShift();
+                System.out.println("切换输入法为：" );
             }
 
         }

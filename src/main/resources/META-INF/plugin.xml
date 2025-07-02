@@ -1,30 +1,69 @@
 <!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin>
     <id>cn.mumukehao.plugin</id>
+<!--    <version>1.0.1</version>-->
+    <name>AUTO-INPUT-CH-EN</name>
+    <!--    <vendor></vendor>-->
+    <vendor email="charruilin@gmail.com" url="https://github.com/lin-uice/AUTO-INPUT-CH-EN">沐沐可好</vendor>
 
-    <name>PPlugin</name>
-<!--    <vendor></vendor>-->
-    <vendor email="chairuilin@163.com" url="https://mumukehao.cn">沐沐可好</vendor>
     <description><![CDATA[
-        检测当前鼠标指针是在注释中还是代码中aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+     <description>
+  <p><strong>AUTO INPUT CH-EN</strong></p>
+  <p>Automatically switch between Chinese and English input methods based on cursor position to avoid typing and coding errors caused by language switching. It also supports IdeaVim.</p>
+  <p>根据光标位置自动切换中文和英文输入法，避免因语言切换导致的打字和编码错误。它也支持 IdeaVim。</p>
+  <p>注意,安装完插件应重启idea/pycharm等.在光标点击应用外时,会自动切换为该界面你设置的中/英.如果初始中英设置出错,手动切换一次即可</p>
+  <h3>解决了什么问题</h3>
+  <p>AICE 通过集成在 IDE 内，可以根据输入位置分析当前所处的场景，并完成自动切换。</p>
+
+  <h3>使用场景</h3>
+  <ul>
+    <li>默认场景: 英文输入法</li>
+    <li>注释场景: 中文输入法</li>
+    <li>工具窗口场景: 英文输入法</li>
+    <li>IdeaVIM 场景: insert 模式之外全为英文输入法，insert 模式内自动切换中英输入法</li>
+    <li>离开 IDE 场景: 切换到中文输入法</li>
+  </ul>
+
+  <h3>支持输入法</h3>
+  <ul>
+    <li>微软拼音</li>
+    <li>搜狗输入法</li>
+    <li>百度输入法</li>
+  </ul>
+
+  <h3>明确不支持的输入法</h3>
+  <ul>
+    <li>微信输入法</li>
+  </ul>
+
+  <h3>支持的应用</h3>
+  <p>其严格按照 JetBrains API 编写，理论支持所有 JetBrains IDE。</p>
+
+  <h3>使用平台</h3>
+  <p>当前暂时只支持 Windows。</p>
+
+  <h3>关于更新</h3>
+  <p>目前正在准备秋招项目，等秋招结束后，将进行重构并支持更丰富的功能。</p>
+</description>
     ]]></description>
     <depends>com.intellij.modules.platform</depends>
     <depends>com.intellij.modules.lang</depends>
 
-    <depends>IdeaVIM</depends>
+    <depends optional="true" config-file="./idea-vim-extension.xml">IdeaVIM</depends>
+<!--    <depends optional="true"></depends>-->
     <extensions defaultExtensionNs="com.intellij">
-<!--    <projectService serviceImplementation="ss.ssss" />-->
+        <!--    <projectService serviceImplementation="ss.ssss" />-->
         <postStartupActivity implementation="ss.ssss"/>
-        <editorFactoryMouseMotionListener implementation="MouseContextDetector" />
-        <editorFactoryMouseListener implementation="MouseClickDetector" />
+        <editorFactoryMouseMotionListener implementation="MouseContextDetector"/>
+        <editorFactoryMouseListener implementation="MouseClickDetector"/>
         <editorFactoryListener implementation="MyEditorListener"/>
-<!--        <-->
+        <!--        <-->
     </extensions>
-<!--    <actions>-->
-<!--        <action id="MyAction" class="MyAction" text="MyAction" description="MyAction">-->
-<!--            <add-to-group group-id="FileMenu" anchor="first"/>-->
+    <!--    <actions>-->
+    <!--        <action id="MyAction" class="MyAction" text="MyAction" description="MyAction">-->
+    <!--            <add-to-group group-id="FileMenu" anchor="first"/>-->
 
 
-<!--        </action>-->
-<!--    </actions>-->
+    <!--        </action>-->
+    <!--    </actions>-->
 </idea-plugin>

@@ -208,8 +208,11 @@ public class CursorCommentDetector extends GlobalMouseTracker implements CaretLi
 
         System.out.println("鼠标已离开IDEA主窗口");
         CursorState newCursorState = CursorState.OUTIDE;
+        System.out.println("之前光标状态为：" + cursorState);
+        System.out.println("现在光标状态为：" + newCursorState);
         if (!cursorState.equals(newCursorState)) {
             cursorState = newCursorState;
+//            System.out.println("鼠标已离开IDEA主窗口");
             if (!cursorState.getLanguage().equals(InputMethodChecker.GetMode())) {
                 InputMethodChecker.pressShift();
             }

@@ -73,11 +73,11 @@ public class MyEditorListener implements EditorFactoryListener {
             ApplicationManager.getApplication().getMessageBus().connect().subscribe(ApplicationActivationListener.TOPIC,listener);
             EditorFocusTracker.addFocusListener(project, hasFocus -> {
                 if (hasFocus) {
-                    CursorCommentDetectorVim.OUTEDITOR = false;
+                    CursorCommentDetector.OUTEDITOR = false;
                      System.out.println("获得了注意"); // 比如启用光标监听这个时候,其实不进行操作
                 } else {
                     System.out.println("失去了注意");
-                    CursorCommentDetectorVim.OUTEDITOR = true;
+                    CursorCommentDetector.OUTEDITOR = true;
                     listener.chekOutEditor();
                 }
             });
