@@ -19,7 +19,7 @@ AICE 通过集成在IDE内.其可以通过输入位置分析当前处于什么�
 #### 明确不支持的输入法:
 1. 微信输入法
 ### 支持的应用:
-其严格按照jetbrain api编写,支持如下语言:java,python,javascript,kotlin,yaml,shell,csharp,typescript,php,ruby,swift,go,rust,scala,perl,lua,sql,css,html,xml,c,cpp.
+其严格按照jetbrain api编写,理论支持所有jetbrain应用,支持如下语言:java,python,javascript,kotlin,yaml,shell,csharp,typescript,php,ruby,swift,go,rust,scala,perl,lua,sql,css,html,xml,c,cpp.
 
 ### 使用平台: 
 当前暂时只支持windows,未来计划添加linux.由于没有mac电脑,暂无适配的计划
