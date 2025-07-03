@@ -25,7 +25,7 @@ dependencies {
 //    implementation("net.java.dev.jna:jna-platform:5.17.0")
 
     intellijPlatform {
-        create("IC", "2023.1")
+        create("IC", "2024.2")
         testFramework(org.jetbrains.intellij.platform.gradle.TestFrameworkType.Platform)
         bundledPlugins(providers.gradleProperty("platformBundledPlugins").map { it.split(',') })
         plugins(providers.gradleProperty("platformPlugins").map { it.split(',') })
@@ -42,7 +42,7 @@ idea{
 intellijPlatform {
     pluginConfiguration {
         ideaVersion {
-            sinceBuild = "241"
+            sinceBuild = "242"
             untilBuild="253.*"
         }
 

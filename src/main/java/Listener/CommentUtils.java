@@ -1,9 +1,17 @@
 package Listener;
 
+import ENUM.CommentSyntax;
+import com.intellij.lang.Language;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.LogicalPosition;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.*;
+import com.jetbrains.rd.generator.nova.Lang;
+import utils.CommentSyntaxMapper;
+
+import java.util.HashMap;
+import java.util.Map;
+
 //import com.q.q.q.q.S;
 
 public class CommentUtils {
@@ -21,9 +29,11 @@ public class CommentUtils {
         }
 
         Project project = editor.getProject();
-        if (project == null){
+        if (project == null) {
             System.out.println("project is null");
-            return null;};
+            return null;
+        }
+        ;
 
 
         PsiDocumentManager manager = PsiDocumentManager.getInstance(project);
@@ -32,31 +42,27 @@ public class CommentUtils {
         PsiFile psiFile = manager.getPsiFile(editor.getDocument());
 
 
-
-
-
-
-
-
 //        PsiFile psiFile = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
         if (psiFile == null) {
 //            System.out.println("psiFile is null");
-            return null;}
+            return null;
+        }
 
         int offset = editor.getCaretModel().getOffset();
         PsiElement element = getElementAtOffset(psiFile, offset);
         if (element == null) {
 //            System.out.println("element is null");
-            return null;}
+            return null;
+        }
 
         // 检查当前元素是否是注释
         if (element instanceof PsiComment) {
 //            System.out.println("Comment type: " + CommentType.LINE);
             return getCommentType((PsiComment) element);
         }
-        if(offset>0){
+        if (offset > 0) {
             PsiElement prevElement = psiFile.findElementAt(offset - 1);
-            if(prevElement instanceof PsiComment){
+            if (prevElement instanceof PsiComment) {
 //                System.out.println("Comment type: " + CommentType.LINE);
                 return getCommentType((PsiComment) prevElement);
             }
@@ -92,41 +98,58 @@ public class CommentUtils {
         return element;
     }
 
+    //判断是那种语言
+
+//        // 有待优化,Switch有点不够优雅
+//        switch (id) {
+//            case "java":
+//                return CommentSyntax.JAVA;
+//            case "python":
+//                return CommentSyntax.PYTHON;
+//            case "javascript":
+//                return CommentSyntax.JAVASCRIPT;
+//            case "kotlin":
+//                return CommentSyntax.KOTLIN;
+//            case "yaml":
+//                return CommentSyntax.YAML;
+//            case "shell":
+//                return CommentSyntax.SHELL;
+//            // 如果还有其他语言，可以在这里扩展
+//            default:
+//                return null;
+//        }
+//    }
+
     /**
      * 判断注释的具体类型
      */
     private static CommentType getCommentType(PsiComment comment) {
-//        System.out.println("Checking comment type..."+comment.getText());
-        if (comment instanceof PsiDocCommentBase) {
-//            System.out.println("Comment type: " + CommentType.DOCUMENTATION);
-            return CommentType.DOCUMENTATION;
-        }
-
         String text = comment.getText();
+        Language language = comment.getLanguage();
+        CommentSyntax syntax = CommentSyntaxMapper.getSyntaxForLanguage(language.getID());
+        if (syntax == null) return CommentType.UNKNOWN;
 
-        if (text.startsWith("//")) {
-//            System.out.println("Comment type: " + CommentType.LINE);
+        if (syntax.docStart != null && text.startsWith(syntax.docStart)) {
+            return CommentType.DOCUMENTATION;
+        } else if (syntax.linePrefix != null && text.startsWith(syntax.linePrefix)) {
             return CommentType.LINE;
-        } else if (text.startsWith("/*") && !text.startsWith("/**")) {
-            // 确保不是文档注释
-//            System.out.println("Comment type: " + CommentType.BLOCK);
+        } else if (syntax.blockStart != null && text.startsWith(syntax.blockStart)) {
             return CommentType.BLOCK;
+        } else {
+            return CommentType.UNKNOWN;
         }
-
-        //侧事故
-        //测试
-        return null;
     }
 
     /**
      * 注释类型枚举
      */
     //测试
-        //侧事故
+    //侧事故
 
     public enum CommentType {
         LINE,       // 行注释 //
         BLOCK,      // 块注释 /* */
-        DOCUMENTATION // 文档注释 /** */
+        DOCUMENTATION, // 文档注释 /** */
+        UNKNOWN     // 未知类型
     }
 }

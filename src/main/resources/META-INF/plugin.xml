@@ -37,7 +37,7 @@
   </ul>
 
   <h3>支持的应用</h3>
-  <p>其严格按照 JetBrains API 编写，理论支持所有 JetBrains IDE。</p>
+  <p>支持所有JETBRAINS应用,支持的语法有:JAVA,JS,PYTHON,KT,SHELL,YAML.其余语言正在陆续支持中</p>
 
   <h3>使用平台</h3>
   <p>当前暂时只支持 Windows,计划未来支持linux.由于mac开发者的限制,因此暂时没有支持mac的计划</p>
