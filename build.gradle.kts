@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "cn.mumukehao"
-version = "1.0.1"
+version = "1.0.2"
 
 repositories {
     mavenCentral()
@@ -25,7 +25,7 @@ dependencies {
 //    implementation("net.java.dev.jna:jna-platform:5.17.0")
 
     intellijPlatform {
-        create("IC", "2025.1")
+        create("IC", "2023.1")
         testFramework(org.jetbrains.intellij.platform.gradle.TestFrameworkType.Platform)
         bundledPlugins(providers.gradleProperty("platformBundledPlugins").map { it.split(',') })
         plugins(providers.gradleProperty("platformPlugins").map { it.split(',') })
@@ -42,7 +42,8 @@ idea{
 intellijPlatform {
     pluginConfiguration {
         ideaVersion {
-            sinceBuild = "251"
+            sinceBuild = "241"
+            untilBuild="253.*"
         }
 
         changeNotes = """
@@ -54,7 +55,7 @@ intellijPlatform {
 tasks {
     // Set the JVM compatibility versions
     withType<JavaCompile> {
-        sourceCompatibility = "21"
+        sourceCompatibility = "17"
         targetCompatibility = "21"
     }
     withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {

@@ -5,7 +5,7 @@
     <name>AUTO-INPUT-CH-EN</name>
     <!--    <vendor></vendor>-->
     <vendor email="charruilin@gmail.com" url="https://github.com/lin-uice/AUTO-INPUT-CH-EN">沐沐可好</vendor>
-
+<!--    <idea-version since-build="231" />-->
     <description><![CDATA[
      <description>
   <p><strong>AUTO INPUT CH-EN</strong></p>
@@ -40,7 +40,7 @@
   <p>其严格按照 JetBrains API 编写，理论支持所有 JetBrains IDE。</p>
 
   <h3>使用平台</h3>
-  <p>当前暂时只支持 Windows。</p>
+  <p>当前暂时只支持 Windows,计划未来支持linux.由于mac开发者的限制,因此暂时没有支持mac的计划</p>
 
   <h3>关于更新</h3>
   <p>目前正在准备秋招项目，等秋招结束后，将进行重构并支持更丰富的功能。</p>
@@ -59,6 +59,13 @@
         <editorFactoryListener implementation="MyEditorListener"/>
         <!--        <-->
     </extensions>
+    <change-notes>
+        <![CDATA[
+           <p>1.0.2 验证支持更多windows版本</p>
+           <p>1.0.1 正式上线</p>
+           <p>1.0.0</p>
+        ]]>
+    </change-notes>
     <!--    <actions>-->
     <!--        <action id="MyAction" class="MyAction" text="MyAction" description="MyAction">-->
     <!--            <add-to-group group-id="FileMenu" anchor="first"/>-->

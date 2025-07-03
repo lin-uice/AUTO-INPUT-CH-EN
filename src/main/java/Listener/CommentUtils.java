@@ -4,7 +4,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.LogicalPosition;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.*;
-import com.q.q.q.q.S;
+//import com.q.q.q.q.S;
 
 public class CommentUtils {
     /**
