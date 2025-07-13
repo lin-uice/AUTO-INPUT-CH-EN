@@ -25,7 +25,7 @@ AICE 通过集成在IDE内.其可以通过输入位置分析当前处于什么�
 当前暂时只支持windows,未来计划添加linux.由于没有mac电脑,暂无适配的计划
 ### 更新计划:
 #### 1.0.3
-解决问题 #1 [问题1]](https://github.com/lin-uice/AUTO-INPUT-CH-EN/issues/1)
+解决问题 [问题]](https://github.com/lin-uice/AUTO-INPUT-CH-EN/issues/1)
 #### 1.0.4
 重构插件,轻量化插件,优化插件大小以及响应速度
 #### 1.0.4 
