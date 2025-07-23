@@ -101,8 +101,8 @@ public class CursorCommentDetectorVim extends GlobalMouseTracker implements Care
         vimModeChecker = new VimModeChecker(editor);
         cursorState = CursorState.INCODE;
 //        CursorState newCursorState;
-        CommentUtils.CommentType commentType = CommentUtils.identifyCommentType(editor);
-        if (commentType != null) {
+        boolean commentType = CommentUtils.identifyCommentType(editor);
+        if (commentType) {
             cursorState = CursorState.INCOMMENT;
 //            result = "Cursor is in a comment.";
         } else {
@@ -144,8 +144,8 @@ public class CursorCommentDetectorVim extends GlobalMouseTracker implements Care
         if (ISENSERT == false) {
             newCursorState = CursorState.INCODE;
         } else {
-            CommentUtils.CommentType commentType = CommentUtils.identifyCommentType(editor);
-            if (commentType != null) {
+            boolean commentType = CommentUtils.identifyCommentType(editor);
+            if (commentType) {
                 newCursorState = CursorState.INCOMMENT;
             } else {
                 newCursorState = CursorState.INCODE;

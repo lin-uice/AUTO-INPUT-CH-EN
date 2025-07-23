@@ -96,8 +96,8 @@ public class CursorCommentDetector extends GlobalMouseTracker implements CaretLi
         vimModeChecker = new VimModeChecker(editor);
         cursorState = CursorState.INCODE;
 //        CursorState newCursorState;
-        CommentUtils.CommentType commentType = CommentUtils.identifyCommentType(editor);
-        if (commentType != null) {
+        boolean iscomment = CommentUtils.identifyCommentType(editor);
+        if (iscomment) {
             cursorState = CursorState.INCOMMENT;
 //            result = "Cursor is in a comment.";
         } else {
@@ -137,8 +137,8 @@ public class CursorCommentDetector extends GlobalMouseTracker implements CaretLi
 
         String result;
         CursorState newCursorState;
-        CommentUtils.CommentType commentType = CommentUtils.identifyCommentType(editor);
-        if (commentType != null) {
+        boolean commentType = CommentUtils.identifyCommentType(editor);
+        if (commentType) {
             newCursorState = CursorState.INCOMMENT;
         } else {
             newCursorState = CursorState.INCODE;
