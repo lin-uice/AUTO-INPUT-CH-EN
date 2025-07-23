@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 //import com.intellij.idea.vim.common
 
 
-public class CursorCommentDetector extends GlobalMouseTracker implements CaretListener, EditorMouseListener, EditorMouseMotionListener, ApplicationActivationListener {
+public class CursorCommentDetector extends GlobalMouseTracker implements CaretListener,  ApplicationActivationListener {
     //
     static CursorState cursorState = CursorState.INCODE;
     private Logger LOG = Logger.getInstance(CursorCommentDetector.class);
@@ -39,49 +39,7 @@ public class CursorCommentDetector extends GlobalMouseTracker implements CaretLi
     }
 
 
-//    @Override
-//    public void WindowsListener() {
-//        if (ideaWindow == null) {
-//            System.err.println("❌ GlobalMouseTracker: Failed to get IDEA window.");
-//            return;
-//        }
-//
-////        System.out.println("✅ GlobalMouseTracker: Successfully registered for window: " + ideaWindow.getName());
-//
-//        Toolkit.getDefaultToolkit().addAWTEventListener(event -> {
-////            System.out.println("💡 捕获到 AWT 事件: " + event);
-//
-//            if (event instanceof MouseEvent mouseEvent) {
-//                Point mousePoint = MouseInfo.getPointerInfo().getLocation();
-//                Rectangle windowBounds = ideaWindow.getBounds();
-//                boolean isInsideIdeaWindow = windowBounds.contains(mousePoint);
-////                checkAndPrint();
-////                System.out.println("🖱️ 鼠标位置: " + mousePoint);
-////                System.out.println("📐 IDEA 窗口范围: " + windowBounds);
-//                //进入,改为英文.退出,改为中文.
-//                CursorState newCursorState = CursorState.INCODE;
-//                if (mouseEvent.getID() == MouseEvent.MOUSE_EXITED) {
-//                    isMouseInIdeaWindow = false;//判断是否在idea内
-//                    newCursorState = CursorState.OUTIDE;
-//                    System.out.println("【全局】鼠标已完全离开 IntelliJ IDEA 窗口");
-//                } else if (mouseEvent.getID() == MouseEvent.MOUSE_ENTERED) {
-//                    isMouseInIdeaWindow = true;
-//                    newCursorState = CursorState.INCODE;
-//                    System.out.println("【全局】鼠标重新进入 IntelliJ IDEA 窗口");
-//                }
-////                System.out.println("【全局】当前输入法状态为：" + newCursorState);
-////                System.out.println("【全局】旧的输入法状态为：" + cursorState);
-////                if (!newCursorState.equals(cursorState))
-//                if (!cursorState.getLanguage().equals(InputMethodChecker.GetMode())) {
-////                        inputMethodChecker.pressShift();
-//                }
 
-    /// /                cursorState = newCursorState;
-//
-//
-//            }
-//        }, AWTEvent.MOUSE_EVENT_MASK | AWTEvent.MOUSE_MOTION_EVENT_MASK);
-//    }
     @Override
     public void caretPositionChanged(@NotNull CaretEvent e) {
 //        System.out.println("CursorCommentDetector.caretPositionChanged");
@@ -109,23 +67,12 @@ public class CursorCommentDetector extends GlobalMouseTracker implements CaretLi
     }
 
 
-    @Override
-    public void mouseMoved(EditorMouseEvent event) {
-
-    }
-
-    @Override
-    public void mouseEntered(EditorMouseEvent event) {
-
-    }
 
     private void checkPrintMode() {
 
     }
 
-    @Override
-    public void mouseExited(EditorMouseEvent event) {
-    }
+
 
 
     public boolean isInComment(Editor editor) {
@@ -177,17 +124,9 @@ public class CursorCommentDetector extends GlobalMouseTracker implements CaretLi
     }
 
 
-    @Override
-    public void mouseClicked(EditorMouseEvent event) {
-    }
 
-    @Override
-    public void mousePressed(EditorMouseEvent event) {
-    }
 
-    @Override
-    public void mouseReleased(EditorMouseEvent event) {
-    }
+
 
 
 

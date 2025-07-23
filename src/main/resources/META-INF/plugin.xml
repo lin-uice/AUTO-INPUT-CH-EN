@@ -54,8 +54,6 @@
     <extensions defaultExtensionNs="com.intellij">
         <!--    <projectService serviceImplementation="ss.ssss" />-->
 <!--        <postStartupActivity implementation="ss.ssss"/>-->
-        <editorFactoryMouseMotionListener implementation="MouseContextDetector"/>
-        <editorFactoryMouseListener implementation="MouseClickDetector"/>
         <editorFactoryListener implementation="MyEditorListener"/>
         <!--        <-->
     </extensions>

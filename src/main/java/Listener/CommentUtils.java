@@ -1,6 +1,5 @@
 package Listener;
 
-import ENUM.CommentSyntax;
 import com.intellij.lang.Language;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.WriteCommandAction;
@@ -10,7 +9,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.source.resolve.reference.impl.manipulators.PsiCommentManipulator;
 import com.jetbrains.rd.generator.nova.Lang;
-import utils.CommentSyntaxMapper;
 
 import java.util.HashMap;
 import java.util.Map;

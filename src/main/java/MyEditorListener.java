@@ -45,8 +45,6 @@ public class MyEditorListener implements EditorFactoryListener {
                 globalMouseListenerInstalled = true;
             }
             editor.getCaretModel().addCaretListener(listener, project);
-            editor.addEditorMouseListener(listener, project);
-            editor.addEditorMouseMotionListener(listener, project);
             ApplicationManager.getApplication().getMessageBus().connect().subscribe(ApplicationActivationListener.TOPIC,listener);
             System.out.println("Vim插件已经启用了!!");
             EditorFocusTracker.addFocusListener(project, hasFocus -> {
@@ -68,8 +66,6 @@ public class MyEditorListener implements EditorFactoryListener {
                 globalMouseListenerInstalled = true;
             }
             editor.getCaretModel().addCaretListener(listener, project);
-            editor.addEditorMouseListener(listener, project);
-            editor.addEditorMouseMotionListener(listener, project);
             ApplicationManager.getApplication().getMessageBus().connect().subscribe(ApplicationActivationListener.TOPIC,listener);
             EditorFocusTracker.addFocusListener(project, hasFocus -> {
                 if (hasFocus) {
