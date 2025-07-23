@@ -2,6 +2,8 @@ package Listener;
 
 import ENUM.CommentSyntax;
 import com.intellij.lang.Language;
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.LogicalPosition;
 import com.intellij.openapi.project.Project;
@@ -37,7 +39,11 @@ public class CommentUtils {
 
 
         PsiDocumentManager manager = PsiDocumentManager.getInstance(project);
-        manager.commitAllDocuments(); // 强制提交所有文档变更
+        ApplicationManager.getApplication().invokeAndWait(() -> {
+            WriteCommandAction.runWriteCommandAction(project, () -> {
+                PsiDocumentManager.getInstance(project).commitDocument(editor.getDocument());
+            });
+        });
 
         PsiFile psiFile = manager.getPsiFile(editor.getDocument());
 
@@ -127,7 +133,9 @@ public class CommentUtils {
         String text = comment.getText();
         Language language = comment.getLanguage();
         CommentSyntax syntax = CommentSyntaxMapper.getSyntaxForLanguage(language.getID());
-        if (syntax == null) return CommentType.UNKNOWN;
+        if (syntax == null) {
+            return CommentType.UNKNOWN;
+        }
 
         if (syntax.docStart != null && text.startsWith(syntax.docStart)) {
             return CommentType.DOCUMENTATION;

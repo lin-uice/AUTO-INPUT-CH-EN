@@ -20,12 +20,12 @@ repositories {
 val platformPlugins: String by project
 // Configure Gradle IntelliJ Plugin
 dependencies {
-    implementation("com.maddyhome.idea:ideavim:2.23.0")
+    implementation("com.maddyhome.idea:ideavim:2.22.0")
 //    implementation("net.java.dev.jna:jna:5.17.0")
 //    implementation("net.java.dev.jna:jna-platform:5.17.0")
 
     intellijPlatform {
-        create("IC", "2024.2")
+        create("IC", "2024.3.3")
         testFramework(org.jetbrains.intellij.platform.gradle.TestFrameworkType.Platform)
         bundledPlugins(providers.gradleProperty("platformBundledPlugins").map { it.split(',') })
         plugins(providers.gradleProperty("platformPlugins").map { it.split(',') })
@@ -42,7 +42,7 @@ idea{
 intellijPlatform {
     pluginConfiguration {
         ideaVersion {
-            sinceBuild = "242"
+            sinceBuild = "243.3"
             untilBuild="253.*"
         }
 
