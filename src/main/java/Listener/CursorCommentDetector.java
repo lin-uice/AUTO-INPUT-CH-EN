@@ -2,7 +2,6 @@ package Listener;
 
 import ENUM.CursorState;
 import InputMethod.InputMethodChecker;
-import Listener.test.EditorFocusTracker;
 import com.intellij.openapi.application.ApplicationActivationListener;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.CaretModel;
@@ -12,10 +11,6 @@ import com.intellij.openapi.editor.event.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.wm.IdeFrame;
-import com.maddyhome.idea.vim.api.VimEditor;
-import com.maddyhome.idea.vim.common.ModeChangeListener;
-import com.maddyhome.idea.vim.newapi.IjVimEditorKt;
-import com.maddyhome.idea.vim.state.mode.Mode;
 import org.jetbrains.annotations.NotNull;
 //import com.intellij.idea.vim.common
 

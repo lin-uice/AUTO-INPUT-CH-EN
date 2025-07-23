@@ -3,7 +3,7 @@
 import Listener.CursorCommentDetector;
 import Listener.CursorCommentDetectorVim;
 //import Listener.test.AutoFocusTracker;
-import Listener.test.EditorFocusTracker;
+import Listener.EditorFocusTracker;
 import com.intellij.openapi.application.ApplicationActivationListener;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Editor;
