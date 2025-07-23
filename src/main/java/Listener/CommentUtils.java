@@ -8,6 +8,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.LogicalPosition;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.*;
+import com.intellij.psi.impl.source.resolve.reference.impl.manipulators.PsiCommentManipulator;
 import com.jetbrains.rd.generator.nova.Lang;
 import utils.CommentSyntaxMapper;
 
@@ -39,11 +40,12 @@ public class CommentUtils {
 
 
         PsiDocumentManager manager = PsiDocumentManager.getInstance(project);
-        ApplicationManager.getApplication().invokeAndWait(() -> {
-            WriteCommandAction.runWriteCommandAction(project, () -> {
-                PsiDocumentManager.getInstance(project).commitDocument(editor.getDocument());
-            });
+        WriteCommandAction.runWriteCommandAction(project, () -> {
+//            PsiDocumentManager.getInstance(project).commitDocument(editor.getDocument());
+            PsiDocumentManager.getInstance(project).commitAllDocuments();
         });
+        //测
+
 
         PsiFile psiFile = manager.getPsiFile(editor.getDocument());
 
