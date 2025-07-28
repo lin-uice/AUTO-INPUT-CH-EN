@@ -15,15 +15,12 @@ public class CursorCommentDetector  implements CaretListener,  ApplicationActiva
     //
     static CursorState cursorState = CursorState.INCODE;
 
-    static VimModeChecker vimModeChecker;
     static InputMethodChecker inputMethodChecker;
     public static EditorFocusTracker editorFocusTracker = new EditorFocusTracker();
 
     static boolean OUTIDEA;
     public static boolean OUTEDITOR;
-    static {
-        inputMethodChecker = new InputMethodChecker();
-    }
+
 
     public CursorCommentDetector(Project project) {
 //        WindowsListener();
@@ -41,7 +38,6 @@ public class CursorCommentDetector  implements CaretListener,  ApplicationActiva
     // 在 CursorCommentDetector.java 中添加这个静态方法
     public static void installGlobalMouseListener(Project project, Editor editor) {
         System.out.println("CursorCommentDetector!!!!!");
-        vimModeChecker = new VimModeChecker(editor);
         cursorState = CursorState.INCODE;
 //        CursorState newCursorState;
         boolean iscomment = CommentUtils.identifyCommentType(editor);

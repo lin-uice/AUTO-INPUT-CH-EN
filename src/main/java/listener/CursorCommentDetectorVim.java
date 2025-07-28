@@ -26,14 +26,11 @@ public class CursorCommentDetectorVim implements CaretListener, ModeChangeListen
     //
     static CursorState cursorState = CursorState.INCODE;
    static VimModeChecker vimModeChecker;
-    static InputMethodChecker inputMethodChecker;
 
     private static boolean ISENSERT = false;
     static boolean OUTIDEA;
     public static boolean OUTEDITOR;
-    static {
-        inputMethodChecker = new InputMethodChecker();
-    }
+
 
     public CursorCommentDetectorVim(Project project) {
     }
@@ -51,28 +48,18 @@ public class CursorCommentDetectorVim implements CaretListener, ModeChangeListen
         System.out.println("CursorCommentDetector!!!!!");
         vimModeChecker = new VimModeChecker(editor);
         cursorState = CursorState.INCODE;
-//        CursorState newCursorState;
         boolean commentType = CommentUtils.identifyCommentType(editor);
         if (commentType) {
             cursorState = CursorState.INCOMMENT;
-//            result = "Cursor is in a comment.";
         } else {
             cursorState = CursorState.INCODE;
-//            result = "Cursor is in code.";
         }
 
 
     }
 
 
-
-
-
-
     private void checkAndPrint(Editor editor) {
-
-
-        String result;
         CursorState newCursorState;
         if (ISENSERT == false) {
             newCursorState = CursorState.INCODE;
@@ -100,28 +87,12 @@ public class CursorCommentDetectorVim implements CaretListener, ModeChangeListen
     }
 
     // 测试实现
-    @Deprecated
-    // 这是测试时用的函数.
-    public static void printCurrentLine(Editor editor) {
-        if (editor == null) return;
 
-        Document document = editor.getDocument();
-        CaretModel caretModel = editor.getCaretModel();
-        int offset = caretModel.getOffset();
-//        caretModel.
-        int lineNumber = document.getLineNumber(offset);
-
-        int startOffset = document.getLineStartOffset(lineNumber);
-        int endOffset = document.getLineEndOffset(lineNumber);
-
-        String currentLine = document.getText(new TextRange(startOffset, endOffset));
-    }
 
 
 
     @Override
     public void modeChanged(@NotNull VimEditor vimEditor, @NotNull Mode mode) {
-
 
         Editor editor = IjVimEditorKt.getIj(vimEditor);
         //如果当前不是插入模式,则改为插入模式
