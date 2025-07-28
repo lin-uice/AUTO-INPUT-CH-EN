@@ -1,4 +1,4 @@
-package ENUM;
+package enums;
 
 public enum InputState {
     ENGLISH,

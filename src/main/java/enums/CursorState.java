@@ -1,4 +1,4 @@
-package ENUM;
+package enums;
 
 public enum CursorState {
    OUTIDE("OUTSIDE",InputState.CHINESE),//在IDE外

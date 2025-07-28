@@ -1,10 +1,9 @@
-package InputMethod;
+package inputmethod;
 
-import ENUM.InputState;
+import enums.InputState;
 //import com.intellij.jna.JnaLoader;
 //import com.intellij.jna.JnaLoader;
 //import com.intellij.jna.JnaLoader;
-import com.intellij.openapi.application.ApplicationManager;
 import com.sun.jna.Library;
 import com.sun.jna.Native;
 import com.sun.jna.Pointer;
@@ -22,7 +21,6 @@ import com.intellij.openapi.diagnostic.Logger;
 public class InputMethodChecker {
     private static long lastPressTime = 0;
     private static final long MIN_PRESS_INTERVAL_MS = 100; // 设置最小间隔为500毫秒
-    static Logger logger = Logger.getInstance(InputMethodChecker.class);
 
     static {
         try {

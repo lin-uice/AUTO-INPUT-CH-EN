@@ -1,4 +1,4 @@
-package Listener;
+package listener;
 
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ex.EditorEx;

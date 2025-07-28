@@ -1,28 +1,18 @@
-package Listener;//package Listener;
+package listener;//package Listener;
 /// /
 /// /
 /// /import .maddyhome.idea.vim.VimPlugin;
 
-import com.esotericsoftware.kryo.kryo5.minlog.Log;
 import com.intellij.openapi.editor.Editor;
-import com.maddyhome.idea.vim.VimKeyListener;
-import com.maddyhome.idea.vim.VimPlugin;
 import com.maddyhome.idea.vim.api.VimEditor;
-import com.maddyhome.idea.vim.common.ModeChangeListener;
-import com.maddyhome.idea.vim.helper.ModeHelper;
 //import com.maddyhome.idea.vim.newapi.IjVimEditorKt;
-import com.maddyhome.idea.vim.listener.VimInsertListener;
 import com.maddyhome.idea.vim.newapi.IjVimEditorKt;
-import com.maddyhome.idea.vim.state.VimStateMachine;
 import com.maddyhome.idea.vim.state.mode.Mode;
-import groovy.util.logging.Log4j;
-import groovy.util.logging.Slf4j;
 
 //import java.util.logging.Logger;
 
 //import java.util.logging.Logger;
 import com.intellij.openapi.diagnostic.Logger;
-import org.jetbrains.annotations.NotNull;
 
 //@Slf4j
 public class VimModeChecker  {
