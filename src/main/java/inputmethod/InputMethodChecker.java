@@ -15,10 +15,9 @@ import com.sun.jna.win32.W32APIOptions;
 import static com.sun.jna.platform.win32.WinUser.KEYBDINPUT.KEYEVENTF_KEYUP;
 import static com.sun.jna.platform.win32.WinUser.VK_LSHIFT;
 
-import com.intellij.openapi.diagnostic.Logger;
-
 //支持搜狗，微软，百度输入法
 public class InputMethodChecker {
+    //这部分难以重构.因为不是spring框架,因此重构之后,反而会影响性能
     private static long lastPressTime = 0;
     private static final long MIN_PRESS_INTERVAL_MS = 100; // 设置最小间隔为500毫秒
 
@@ -77,7 +76,7 @@ public class InputMethodChecker {
     private static final int WM_IME_CONTROL = 0x0283;
     private static final int IMC_GETOPENSTATUS = 0x0001;
 
-    public static InputState GetMode() {
+    public static InputState getCurrentMode() {
         return isEnglishMode() ? InputState.ENGLISH : InputState.CHINESE;
     }
 

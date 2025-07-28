@@ -54,7 +54,7 @@
     <extensions defaultExtensionNs="com.intellij">
         <!--    <projectService serviceImplementation="ss.ssss" />-->
 <!--        <postStartupActivity implementation="ss.ssss"/>-->
-        <editorFactoryListener implementation="MyEditorListener"/>
+        <editorFactoryListener implementation="InputMethodPlugin"/>
         <!--        <-->
     </extensions>
     <change-notes>

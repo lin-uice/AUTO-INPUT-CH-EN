@@ -8,7 +8,7 @@ import com.intellij.openapi.editor.event.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.IdeFrame;
 import org.jetbrains.annotations.NotNull;
-//import com.intellij.idea.vim.common
+import utils.CommentUtils;
 
 
 public class CursorCommentDetector  implements CaretListener,  ApplicationActivationListener {
@@ -40,7 +40,7 @@ public class CursorCommentDetector  implements CaretListener,  ApplicationActiva
         System.out.println("CursorCommentDetector!!!!!");
         cursorState = CursorState.INCODE;
 //        CursorState newCursorState;
-        boolean iscomment = CommentUtils.identifyCommentType(editor);
+        boolean iscomment = CommentUtils.isInComment(editor);
         if (iscomment) {
             cursorState = CursorState.INCOMMENT;
 //            result = "Cursor is in a comment.";
@@ -58,7 +58,7 @@ public class CursorCommentDetector  implements CaretListener,  ApplicationActiva
 
         String result;
         CursorState newCursorState;
-        boolean commentType = CommentUtils.identifyCommentType(editor);
+        boolean commentType = CommentUtils.isInComment(editor);
         if (commentType) {
             newCursorState = CursorState.INCOMMENT;
         } else {
@@ -73,7 +73,7 @@ public class CursorCommentDetector  implements CaretListener,  ApplicationActiva
 
         } else {
             cursorState = newCursorState;
-            if (cursorState.getLanguage().equals(InputMethodChecker.GetMode())) {//如果状态相等,就不需要进行切换输入法.
+            if (cursorState.getLanguage().equals(InputMethodChecker.getCurrentMode())) {//如果状态相等,就不需要进行切换输入法.
 
             } else {
                 InputMethodChecker.pressShift();
@@ -99,7 +99,7 @@ public class CursorCommentDetector  implements CaretListener,  ApplicationActiva
         if (!cursorState.equals(newCursorState)) {
             cursorState = newCursorState;
 //            System.out.println("鼠标已离开IDEA主窗口");
-            if (!cursorState.getLanguage().equals(InputMethodChecker.GetMode())) {
+            if (!cursorState.getLanguage().equals(InputMethodChecker.getCurrentMode())) {
                 InputMethodChecker.pressShift();
             }
 
@@ -120,7 +120,7 @@ public class CursorCommentDetector  implements CaretListener,  ApplicationActiva
             CursorState newCursorState = CursorState.INCODE;
             if (!cursorState.equals(newCursorState)) {
                 cursorState = newCursorState;
-                if (!cursorState.getLanguage().equals(InputMethodChecker.GetMode())) {
+                if (!cursorState.getLanguage().equals(InputMethodChecker.getCurrentMode())) {
                     InputMethodChecker.pressShift();
                 }
 

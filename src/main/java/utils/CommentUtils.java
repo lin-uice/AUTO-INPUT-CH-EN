@@ -1,4 +1,4 @@
-package listener;
+package utils;
 
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.editor.Editor;
@@ -9,12 +9,12 @@ import com.intellij.psi.*;
 
 public class CommentUtils {
     /**
-     * 根据编辑器和光标位置识别注释类型
+     * 根据编辑器和光标位置判断是否在注释中
      *
      * @param editor 当前编辑器
-     * @return 注释类型枚举，如果不是注释则返回 null
+     * @return 如果是注释,则返回true.如果不是注释则返回 false
      */
-    public static boolean identifyCommentType(Editor editor) {
+    public static boolean isInComment(Editor editor) {
 //        System.out.println("Comment方法已经调用了!dsafdsfadsfdasf");
         if (editor == null) {
             System.out.println("editor is null");

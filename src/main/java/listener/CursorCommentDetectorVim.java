@@ -2,9 +2,7 @@ package listener;
 
 import enums.CursorState;
 import inputmethod.InputMethodChecker;
-import listener.CommentUtils;
 import com.intellij.openapi.application.ApplicationActivationListener;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.CaretModel;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.event.CaretEvent;
@@ -13,24 +11,27 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.wm.IdeFrame;
-import listener.VimModeChecker;
 import com.maddyhome.idea.vim.api.VimEditor;
 import com.maddyhome.idea.vim.common.ModeChangeListener;
 import com.maddyhome.idea.vim.newapi.IjVimEditorKt;
 import com.maddyhome.idea.vim.state.mode.Mode;
 import org.jetbrains.annotations.NotNull;
+import utils.CommentUtils;
 //import com.intellij.idea.vim.common
 
 
 public class CursorCommentDetectorVim implements CaretListener, ModeChangeListener, ApplicationActivationListener {
     //
     static CursorState cursorState = CursorState.INCODE;
-   static VimModeChecker vimModeChecker;
-
+//    static VimModeChecker vimModeChecker;
+    static InputMethodChecker inputMethodChecker;
+    public static EditorFocusTracker editorFocusTracker = new EditorFocusTracker();
     private static boolean ISENSERT = false;
     static boolean OUTIDEA;
     public static boolean OUTEDITOR;
-
+    static {
+        inputMethodChecker = new InputMethodChecker();
+    }
 
     public CursorCommentDetectorVim(Project project) {
     }
@@ -46,25 +47,41 @@ public class CursorCommentDetectorVim implements CaretListener, ModeChangeListen
     // 在 CursorCommentDetector.java 中添加这个静态方法
     public static void installGlobalMouseListener(Project project, Editor editor) {
         System.out.println("CursorCommentDetector!!!!!");
-        vimModeChecker = new VimModeChecker(editor);
+//        vimModeChecker = new VimModeChecker(editor);
         cursorState = CursorState.INCODE;
-        boolean commentType = CommentUtils.identifyCommentType(editor);
+//        CursorState newCursorState;
+        boolean commentType = CommentUtils.isInComment(editor);
         if (commentType) {
             cursorState = CursorState.INCOMMENT;
+//            result = "Cursor is in a comment.";
         } else {
             cursorState = CursorState.INCODE;
+//            result = "Cursor is in code.";
         }
 
 
     }
 
 
+
+
+
+    @Deprecated
+    //这是测试用的函数
+    public boolean isInComment(Editor editor) {
+        Project project = editor.getProject();
+        return false;
+    }
+
     private void checkAndPrint(Editor editor) {
+
+
+        String result;
         CursorState newCursorState;
         if (ISENSERT == false) {
             newCursorState = CursorState.INCODE;
         } else {
-            boolean commentType = CommentUtils.identifyCommentType(editor);
+            boolean commentType = CommentUtils.isInComment(editor);
             if (commentType) {
                 newCursorState = CursorState.INCOMMENT;
             } else {
@@ -78,7 +95,7 @@ public class CursorCommentDetectorVim implements CaretListener, ModeChangeListen
 
         } else {
             cursorState = newCursorState;
-            if (cursorState.getLanguage().equals(InputMethodChecker.GetMode())) {//如果状态相等,就不需要进行切换输入法.
+            if (cursorState.getLanguage().equals(InputMethodChecker.getCurrentMode())) {//如果状态相等,就不需要进行切换输入法.
 
             } else {
                 InputMethodChecker.pressShift();
@@ -87,12 +104,28 @@ public class CursorCommentDetectorVim implements CaretListener, ModeChangeListen
     }
 
     // 测试实现
+    @Deprecated
+    // 这是测试时用的函数.
+    public static void printCurrentLine(Editor editor) {
+        if (editor == null) return;
 
+        Document document = editor.getDocument();
+        CaretModel caretModel = editor.getCaretModel();
+        int offset = caretModel.getOffset();
+//        caretModel.
+        int lineNumber = document.getLineNumber(offset);
+
+        int startOffset = document.getLineStartOffset(lineNumber);
+        int endOffset = document.getLineEndOffset(lineNumber);
+
+        String currentLine = document.getText(new TextRange(startOffset, endOffset));
+    }
 
 
 
     @Override
     public void modeChanged(@NotNull VimEditor vimEditor, @NotNull Mode mode) {
+
 
         Editor editor = IjVimEditorKt.getIj(vimEditor);
         //如果当前不是插入模式,则改为插入模式
@@ -124,7 +157,7 @@ public class CursorCommentDetectorVim implements CaretListener, ModeChangeListen
         System.out.println("现在光标状态为：" + newCursorState);
         if (!cursorState.equals(newCursorState)) {
             cursorState = newCursorState;
-            if (!cursorState.getLanguage().equals(InputMethodChecker.GetMode())) {
+            if (!cursorState.getLanguage().equals(InputMethodChecker.getCurrentMode())) {
                 InputMethodChecker.pressShift();
                 System.out.println("切换输入法为：" );
             }
@@ -144,7 +177,7 @@ public class CursorCommentDetectorVim implements CaretListener, ModeChangeListen
             CursorState newCursorState = CursorState.INCODE;
             if (!cursorState.equals(newCursorState)) {
                 cursorState = newCursorState;
-                if (!cursorState.getLanguage().equals(InputMethodChecker.GetMode())) {
+                if (!cursorState.getLanguage().equals(InputMethodChecker.getCurrentMode())) {
                     InputMethodChecker.pressShift();
                 }
 

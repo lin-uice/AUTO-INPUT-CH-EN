@@ -18,7 +18,7 @@ import com.maddyhome.idea.vim.api.VimInjector;
 //import com.maddyhome.idea.vim.listener.VimListenerManager.
 
 
-public class MyEditorListener implements EditorFactoryListener {
+public class InputMethodPlugin implements EditorFactoryListener {
     private static boolean globalMouseListenerInstalled = false;
 
     @Override
