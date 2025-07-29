@@ -24,14 +24,10 @@ public class CursorCommentDetectorVim implements CaretListener, ModeChangeListen
     //
     static CursorState cursorState = CursorState.INCODE;
 //    static VimModeChecker vimModeChecker;
-    static InputMethodChecker inputMethodChecker;
-    public static EditorFocusTracker editorFocusTracker = new EditorFocusTracker();
-    private static boolean ISENSERT = false;
+    private static boolean ISINSERT = false;
     static boolean OUTIDEA;
     public static boolean OUTEDITOR;
-    static {
-        inputMethodChecker = new InputMethodChecker();
-    }
+
 
     public CursorCommentDetectorVim(Project project) {
     }
@@ -78,7 +74,7 @@ public class CursorCommentDetectorVim implements CaretListener, ModeChangeListen
 
         String result;
         CursorState newCursorState;
-        if (ISENSERT == false) {
+        if (ISINSERT == false) {
             newCursorState = CursorState.INCODE;
         } else {
             boolean commentType = CommentUtils.isInComment(editor);
@@ -131,9 +127,9 @@ public class CursorCommentDetectorVim implements CaretListener, ModeChangeListen
         //如果当前不是插入模式,则改为插入模式
         mode = vimEditor.getMode();
         if (mode instanceof Mode.INSERT) {
-            ISENSERT = true;
+            ISINSERT = true;
         } else {
-            ISENSERT = false;
+            ISINSERT = false;
         }
         checkAndPrint(editor);
     }

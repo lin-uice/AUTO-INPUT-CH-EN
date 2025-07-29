@@ -15,15 +15,12 @@ public class CursorCommentDetector  implements CaretListener,  ApplicationActiva
     //
     static CursorState cursorState = CursorState.INCODE;
 
-    static InputMethodChecker inputMethodChecker;
-    public static EditorFocusTracker editorFocusTracker = new EditorFocusTracker();
 
     static boolean OUTIDEA;
     public static boolean OUTEDITOR;
 
 
     public CursorCommentDetector(Project project) {
-//        WindowsListener();
     }
 
 
