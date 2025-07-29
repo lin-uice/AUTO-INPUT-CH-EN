@@ -1,5 +1,6 @@
 //import Listener.CursorCommentDetector;
 
+import com.maddyhome.idea.vim.common.ModeChangeListener;
 import listener.BaseInputMethodDetector;
 import listener.VimInputMethodDetector;
 //import Listener.test.AutoFocusTracker;
@@ -19,68 +20,47 @@ import com.maddyhome.idea.vim.api.VimInjector;
 
 
 public class InputMethodPlugin implements EditorFactoryListener {
-    private static boolean globalMouseListenerInstalled = false;
 
     @Override
     public void editorCreated(@NotNull EditorFactoryEvent event) {
 
         Editor editor = event.getEditor();
         Project project = editor.getProject();
-//        VimModeChecker vimModeChecker = new VimModeChecker();
-//        VimModeChecker vimModeChecker = new VimModeChecker(editor);
-//       editor.getCaretModel().addCaretListener(new CursorCommentDetector(),project);
-        try {
-            //VIm
+        try{
             Class.forName("com.maddyhome.idea.vim.VimPlugin");
             VimInputMethodDetector listener = new VimInputMethodDetector(editor);
-            IjVimInjectorKt.initInjector();
-            VimInjector vimInjector = VimInjectorKt.getInjector();
-            VimListenersNotifier listenersNotifier = vimInjector.getListenersNotifier();
-            listenersNotifier.getModeChangeListeners().add(listener);
-
-            if (!globalMouseListenerInstalled) {
-                System.out.println("🔌 正在安装全局鼠标监听器...");
-                globalMouseListenerInstalled = true;
-            }
-            editor.getCaretModel().addCaretListener(listener, project);
-            ApplicationManager.getApplication().getMessageBus().connect().subscribe(ApplicationActivationListener.TOPIC,listener);
-            System.out.println("Vim插件已经启用了!!");
-            EditorFocusTracker.addFocusListener(project, hasFocus -> {
-                if (hasFocus) {
-                    VimInputMethodDetector.OUTEDITOR = false;
-                     System.out.println("获得了注意"); // 比如启用光标监听这个时候,其实不进行操作
-                } else {
-                    System.out.println("失去了注意");
-                    VimInputMethodDetector.OUTEDITOR = true;
-                    listener.chekOutEditor();
-                }
-            });
-        } catch (ClassNotFoundException e) {
-            System.out.println("现在是无vim的模式");
+            vimMethodFactory(listener);
+            baseMethodFactory( editor,project,listener);
+        }catch (ClassNotFoundException e) {
             BaseInputMethodDetector listener = new BaseInputMethodDetector(editor);
-            editor.getCaretModel().addCaretListener(listener, project);
-            ApplicationManager.getApplication().getMessageBus().connect().subscribe(ApplicationActivationListener.TOPIC,listener);
-            EditorFocusTracker.addFocusListener(project, hasFocus -> {
-                if (hasFocus) {
-                    BaseInputMethodDetector.OUTEDITOR = false;
-                     System.out.println("获得了注意"); // 比如启用光标监听这个时候,其实不进行操作
-                } else {
-                    System.out.println("失去了注意");
-                    BaseInputMethodDetector.OUTEDITOR = true;
-                    listener.chekOutEditor();
-                }
-            });
-
+            baseMethodFactory( editor,project,listener);
         }
     }
 
     @Override
     public void editorReleased(@NotNull EditorFactoryEvent event) {
-//        Editor editor = event.getEditor();
-//        editor.getCaretModel().); // 可选清理
+    }
+    private void baseMethodFactory(Editor editor,Project project,BaseInputMethodDetector listener){
+        editor.getCaretModel().addCaretListener(listener, project);
+        ApplicationManager.getApplication().getMessageBus().connect().subscribe(ApplicationActivationListener.TOPIC,listener);
+        EditorFocusTracker.addFocusListener(project, hasFocus -> {
+            if (hasFocus) {
+                BaseInputMethodDetector.OUTEDITOR = false;
+                System.out.println("获得了注意"); // 比如启用光标监听这个时候,其实不进行操作
+            } else {
+                System.out.println("失去了注意");
+                BaseInputMethodDetector.OUTEDITOR = true;
+                listener.chekOutEditor();
+            }
+        });
+    }
+    private void vimMethodFactory(ModeChangeListener listener){
+        IjVimInjectorKt.initInjector();
+        VimInjector vimInjector = VimInjectorKt.getInjector();
+        VimListenersNotifier listenersNotifier = vimInjector.getListenersNotifier();
+        listenersNotifier.getModeChangeListeners().add(listener);
     }
 
 
-    //注册VIM
 
 }
