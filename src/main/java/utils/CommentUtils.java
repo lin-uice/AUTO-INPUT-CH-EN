@@ -15,7 +15,6 @@ public class CommentUtils {
      * @return 如果是注释,则返回true.如果不是注释则返回 false
      */
     public static boolean isInComment(Editor editor) {
-//        System.out.println("Comment方法已经调用了!dsafdsfadsfdasf");
         if (editor == null) {
             System.out.println("editor is null");
             return false;
@@ -31,43 +30,32 @@ public class CommentUtils {
 
         PsiDocumentManager manager = PsiDocumentManager.getInstance(project);
         WriteCommandAction.runWriteCommandAction(project, () -> {
-//            PsiDocumentManager.getInstance(project).commitDocument(editor.getDocument());
             PsiDocumentManager.getInstance(project).commitAllDocuments();
         });
-        //测
 
 
         PsiFile psiFile = manager.getPsiFile(editor.getDocument());
 
-
-//        PsiFile psiFile = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
         if (psiFile == null) {
-//            System.out.println("psiFile is null");
             return false;
         }
 
         int offset = editor.getCaretModel().getOffset();
         PsiElement element = getElementAtOffset(psiFile, offset);
         if (element == null) {
-//            System.out.println("element is null");
             return false;
         }
 
         // 检查当前元素是否是注释
         if (element instanceof PsiComment) {
-//            System.out.println("Comment type: " + CommentType.LINE);
             return true;
-//            return getCommentType((PsiComment) element);
         }
         if (offset > 0) {
             PsiElement prevElement = psiFile.findElementAt(offset - 1);
             if (prevElement instanceof PsiComment) {
-//                System.out.println("Comment type: " + CommentType.LINE);
                 return true;
             }
         }
-//        System.out.println("当前"+element.getText());
-        // 检查父元素是否是注释
         PsiElement parent = element.getParent();
         while (parent != null) {
             if (parent instanceof PsiComment) {
@@ -76,7 +64,6 @@ public class CommentUtils {
             parent = parent.getParent();
         }
 
-//        System.out.println("当前什么都没有检查出来");
         return false;
     }
 
