@@ -13,14 +13,21 @@ import utils.CommentUtils;
 
 public class BaseInputMethodDetector implements CaretListener,  ApplicationActivationListener {
     //
-    static CursorState cursorState = CursorState.INCODE;
+    public static CursorState cursorState = CursorState.INCODE;
 
 
-    static boolean OUTIDEA;
+    public static boolean OUTIDEA;
     public static boolean OUTEDITOR;
+    public static boolean ISINSERT = false;
 
-
-    public BaseInputMethodDetector(Project project) {
+    public BaseInputMethodDetector(Editor editor) {
+        cursorState = CursorState.INCODE;
+        boolean iscomment = CommentUtils.isInComment(editor);
+        if (iscomment) {
+            cursorState = CursorState.INCOMMENT;
+        } else {
+            cursorState = CursorState.INCODE;
+        }
     }
 
 
@@ -31,21 +38,11 @@ public class BaseInputMethodDetector implements CaretListener,  ApplicationActiv
     }
 
 
-    public static void installGlobalMouseListener(Project project, Editor editor) {
-        cursorState = CursorState.INCODE;
-        boolean iscomment = CommentUtils.isInComment(editor);
-        if (iscomment) {
-            cursorState = CursorState.INCOMMENT;
-        } else {
-            cursorState = CursorState.INCODE;
-        }
-
-
-    }
 
 
 
-    private void checkAndPrint(Editor editor) {
+
+    protected void checkAndPrint(Editor editor) {
 
         CursorState newCursorState;
         boolean commentType = CommentUtils.isInComment(editor);
