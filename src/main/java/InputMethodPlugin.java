@@ -1,6 +1,6 @@
 //import Listener.CursorCommentDetector;
 
-import listener.CursorCommentDetector;
+import listener.BaseInputMethodDetector;
 import listener.CursorCommentDetectorVim;
 //import Listener.test.AutoFocusTracker;
 import listener.EditorFocusTracker;
@@ -59,21 +59,21 @@ public class InputMethodPlugin implements EditorFactoryListener {
             });
         } catch (ClassNotFoundException e) {
             System.out.println("现在是无vim的模式");
-            CursorCommentDetector listener = new CursorCommentDetector(project);
+            BaseInputMethodDetector listener = new BaseInputMethodDetector(project);
             if (!globalMouseListenerInstalled) {
                 System.out.println("🔌 正在安装全局鼠标监听器...");
-                CursorCommentDetector.installGlobalMouseListener(project, editor);  // ✅ 调用静态方法
+                BaseInputMethodDetector.installGlobalMouseListener(project, editor);  // ✅ 调用静态方法
                 globalMouseListenerInstalled = true;
             }
             editor.getCaretModel().addCaretListener(listener, project);
             ApplicationManager.getApplication().getMessageBus().connect().subscribe(ApplicationActivationListener.TOPIC,listener);
             EditorFocusTracker.addFocusListener(project, hasFocus -> {
                 if (hasFocus) {
-                    CursorCommentDetector.OUTEDITOR = false;
+                    BaseInputMethodDetector.OUTEDITOR = false;
                      System.out.println("获得了注意"); // 比如启用光标监听这个时候,其实不进行操作
                 } else {
                     System.out.println("失去了注意");
-                    CursorCommentDetector.OUTEDITOR = true;
+                    BaseInputMethodDetector.OUTEDITOR = true;
                     listener.chekOutEditor();
                 }
             });

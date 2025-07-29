@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import utils.CommentUtils;
 
 
-public class CursorCommentDetector  implements CaretListener,  ApplicationActivationListener {
+public class BaseInputMethodDetector implements CaretListener,  ApplicationActivationListener {
     //
     static CursorState cursorState = CursorState.INCODE;
 
@@ -20,30 +20,24 @@ public class CursorCommentDetector  implements CaretListener,  ApplicationActiva
     public static boolean OUTEDITOR;
 
 
-    public CursorCommentDetector(Project project) {
+    public BaseInputMethodDetector(Project project) {
     }
 
 
 
     @Override
     public void caretPositionChanged(@NotNull CaretEvent e) {
-//        System.out.println("CursorCommentDetector.caretPositionChanged");
         checkAndPrint(e.getEditor());
     }
 
 
-    // 在 CursorCommentDetector.java 中添加这个静态方法
     public static void installGlobalMouseListener(Project project, Editor editor) {
-        System.out.println("CursorCommentDetector!!!!!");
         cursorState = CursorState.INCODE;
-//        CursorState newCursorState;
         boolean iscomment = CommentUtils.isInComment(editor);
         if (iscomment) {
             cursorState = CursorState.INCOMMENT;
-//            result = "Cursor is in a comment.";
         } else {
             cursorState = CursorState.INCODE;
-//            result = "Cursor is in code.";
         }
 
 
@@ -53,7 +47,6 @@ public class CursorCommentDetector  implements CaretListener,  ApplicationActiva
 
     private void checkAndPrint(Editor editor) {
 
-        String result;
         CursorState newCursorState;
         boolean commentType = CommentUtils.isInComment(editor);
         if (commentType) {
@@ -61,10 +54,6 @@ public class CursorCommentDetector  implements CaretListener,  ApplicationActiva
         } else {
             newCursorState = CursorState.INCODE;
         }
-        System.out.println("旧模式" + cursorState);
-        System.out.println("新模式" + newCursorState);
-//        System.out.println(InputMethodChecker.GetMode());
-//        System.out.println(cursorState.getCode());
         if (newCursorState.equals(cursorState)) {
             //不做任何操作
 
@@ -95,7 +84,6 @@ public class CursorCommentDetector  implements CaretListener,  ApplicationActiva
         System.out.println("现在光标状态为：" + newCursorState);
         if (!cursorState.equals(newCursorState)) {
             cursorState = newCursorState;
-//            System.out.println("鼠标已离开IDEA主窗口");
             if (!cursorState.getLanguage().equals(InputMethodChecker.getCurrentMode())) {
                 InputMethodChecker.pressShift();
             }
@@ -105,8 +93,6 @@ public class CursorCommentDetector  implements CaretListener,  ApplicationActiva
     }
 
     public void chekOutEditor() {
-        //这个应该在更新状态后.
-        //现在检测最基本的功能
         try {
             Thread.sleep(10);
         } catch (InterruptedException e) {

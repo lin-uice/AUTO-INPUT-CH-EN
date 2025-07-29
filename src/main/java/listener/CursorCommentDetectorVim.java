@@ -42,37 +42,20 @@ public class CursorCommentDetectorVim implements CaretListener, ModeChangeListen
 
     // 在 CursorCommentDetector.java 中添加这个静态方法
     public static void installGlobalMouseListener(Project project, Editor editor) {
-        System.out.println("CursorCommentDetector!!!!!");
-//        vimModeChecker = new VimModeChecker(editor);
         cursorState = CursorState.INCODE;
-//        CursorState newCursorState;
-        boolean commentType = CommentUtils.isInComment(editor);
-        if (commentType) {
+        boolean iscomment = CommentUtils.isInComment(editor);
+        if (iscomment) {
             cursorState = CursorState.INCOMMENT;
-//            result = "Cursor is in a comment.";
         } else {
             cursorState = CursorState.INCODE;
-//            result = "Cursor is in code.";
         }
 
 
     }
 
-
-
-
-
-    @Deprecated
-    //这是测试用的函数
-    public boolean isInComment(Editor editor) {
-        Project project = editor.getProject();
-        return false;
-    }
-
     private void checkAndPrint(Editor editor) {
 
 
-        String result;
         CursorState newCursorState;
         if (ISINSERT == false) {
             newCursorState = CursorState.INCODE;
@@ -99,24 +82,6 @@ public class CursorCommentDetectorVim implements CaretListener, ModeChangeListen
         }
     }
 
-    // 测试实现
-    @Deprecated
-    // 这是测试时用的函数.
-    public static void printCurrentLine(Editor editor) {
-        if (editor == null) return;
-
-        Document document = editor.getDocument();
-        CaretModel caretModel = editor.getCaretModel();
-        int offset = caretModel.getOffset();
-//        caretModel.
-        int lineNumber = document.getLineNumber(offset);
-
-        int startOffset = document.getLineStartOffset(lineNumber);
-        int endOffset = document.getLineEndOffset(lineNumber);
-
-        String currentLine = document.getText(new TextRange(startOffset, endOffset));
-    }
-
 
 
     @Override
@@ -139,8 +104,6 @@ public class CursorCommentDetectorVim implements CaretListener, ModeChangeListen
     @Override
     public void applicationActivated(IdeFrame ideFrame) {
         OUTIDEA = false;
-
-
     }
 
     @Override
@@ -155,7 +118,6 @@ public class CursorCommentDetectorVim implements CaretListener, ModeChangeListen
             cursorState = newCursorState;
             if (!cursorState.getLanguage().equals(InputMethodChecker.getCurrentMode())) {
                 InputMethodChecker.pressShift();
-                System.out.println("切换输入法为：" );
             }
 
         }
