@@ -1,6 +1,10 @@
 package listener;
 
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.ModalityState;
+import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.editor.Editor;
+import com.intellij.psi.PsiDocumentManager;
 import com.maddyhome.idea.vim.api.VimEditor;
 import com.maddyhome.idea.vim.common.ModeChangeListener;
 import com.maddyhome.idea.vim.newapi.IjVimEditorKt;
@@ -18,9 +22,6 @@ import utils.CommentUtils;
  * @date 2025/7/29 19:06
  */
 public class VimInputMethodDetector extends BaseInputMethodDetector implements ModeChangeListener {
-    public VimInputMethodDetector(Editor editor) {
-        super(editor);
-    }
 
     @Override
     public void modeChanged(@NotNull VimEditor vimEditor, @NotNull Mode mode) {
@@ -38,6 +39,22 @@ public class VimInputMethodDetector extends BaseInputMethodDetector implements M
     }
     @Override
     protected void checkAndPrint(Editor editor) {
+        ApplicationManager.getApplication().invokeLater(() -> {
+            WriteCommandAction.runWriteCommandAction(editor.getProject(), () -> {
+                PsiDocumentManager.getInstance(editor.getProject()).commitAllDocuments();
+                check( editor);
+            });
+
+        }, ModalityState.defaultModalityState());
+
+//        Project project = editor.getProject();
+//        PsiDocumentManager manager = PsiDocumentManager.getInstance(project);
+//        WriteCommandAction.runWriteCommandAction(project, () -> {
+//            PsiDocumentManager.getInstance(project).commitAllDocuments();
+//        });
+
+    }
+    private void check(Editor editor){
         CursorState newCursorState;
         if (ISINSERT== false) {
             newCursorState = CursorState.INCODE;

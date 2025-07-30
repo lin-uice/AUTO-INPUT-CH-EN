@@ -1,11 +1,8 @@
 <!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin>
     <id>cn.mumukehao.plugin</id>
-<!--    <version>1.0.1</version>-->
     <name>AUTO-INPUT-CH-EN</name>
-    <!--    <vendor></vendor>-->
     <vendor email="charruilin@gmail.com" url="https://github.com/lin-uice/AUTO-INPUT-CH-EN">沐沐可好</vendor>
-<!--    <idea-version since-build="231" />-->
     <description><![CDATA[
      <description>
   <p><strong>AUTO INPUT CH-EN</strong></p>
@@ -50,25 +47,9 @@
     <depends>com.intellij.modules.lang</depends>
 
     <depends optional="true" config-file="./idea-vim-extension.xml">IdeaVIM</depends>
-<!--    <depends optional="true"></depends>-->
     <extensions defaultExtensionNs="com.intellij">
-        <!--    <projectService serviceImplementation="ss.ssss" />-->
-<!--        <postStartupActivity implementation="ss.ssss"/>-->
         <editorFactoryListener implementation="InputMethodPlugin"/>
-        <!--        <-->
     </extensions>
-    <change-notes>
-        <![CDATA[
-           <p>1.0.2 验证支持更多windows版本</p>
-           <p>1.0.1 正式上线</p>
-           <p>1.0.0</p>
-        ]]>
-    </change-notes>
-    <!--    <actions>-->
-    <!--        <action id="MyAction" class="MyAction" text="MyAction" description="MyAction">-->
-    <!--            <add-to-group group-id="FileMenu" anchor="first"/>-->
 
 
-    <!--        </action>-->
-    <!--    </actions>-->
 </idea-plugin>

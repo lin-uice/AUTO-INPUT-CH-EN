@@ -5,7 +5,6 @@ import inputmethod.InputMethodChecker;
 import com.intellij.openapi.application.ApplicationActivationListener;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.event.*;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.IdeFrame;
 import org.jetbrains.annotations.NotNull;
 import utils.CommentUtils;
@@ -20,15 +19,6 @@ public class BaseInputMethodDetector implements CaretListener,  ApplicationActiv
     public static boolean OUTEDITOR;
     public static boolean ISINSERT = false;
 
-    public BaseInputMethodDetector(Editor editor) {
-        cursorState = CursorState.INCODE;
-        boolean iscomment = CommentUtils.isInComment(editor);
-        if (iscomment) {
-            cursorState = CursorState.INCOMMENT;
-        } else {
-            cursorState = CursorState.INCODE;
-        }
-    }
 
 
 

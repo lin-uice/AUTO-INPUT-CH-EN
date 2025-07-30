@@ -1,0 +1,5 @@
+<extensions defaultExtensionNs="com.intellij">
+    <!-- 这里可以定义你想要添加的额外扩展点或服务 -->
+    <!-- 例如：<extension implementation="your.package.InputMethodPlugin" point="com.intellij.editorFactoryListener"/> -->
+    <!-- 但是为了保持简单，这里我们先留空 -->
+</extensions>

@@ -1,11 +1,9 @@
 package utils;
 
-import com.intellij.openapi.command.WriteCommandAction;
+
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.*;
-
-//import com.q.q.q.q.S;
 
 public class CommentUtils {
     /**
@@ -21,17 +19,17 @@ public class CommentUtils {
         }
 
         Project project = editor.getProject();
-        if (project == null) {
-            System.out.println("project is null");
-            return false;
-        }
-        ;
-
-
+//        if (project == null) {
+//            System.out.println("project is null");
+//            return false;
+//        }
+//        ;
+//
+//
         PsiDocumentManager manager = PsiDocumentManager.getInstance(project);
-        WriteCommandAction.runWriteCommandAction(project, () -> {
-            PsiDocumentManager.getInstance(project).commitAllDocuments();
-        });
+//        WriteCommandAction.runWriteCommandAction(project, () -> {
+//            PsiDocumentManager.getInstance(project).commitAllDocuments();
+//        });
 
 
         PsiFile psiFile = manager.getPsiFile(editor.getDocument());
