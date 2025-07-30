@@ -46,7 +46,6 @@ public class VimInputMethodDetector extends BaseInputMethodDetector implements M
             });
 
         }, ModalityState.defaultModalityState());
-
 //        Project project = editor.getProject();
 //        PsiDocumentManager manager = PsiDocumentManager.getInstance(project);
 //        WriteCommandAction.runWriteCommandAction(project, () -> {
@@ -54,7 +53,7 @@ public class VimInputMethodDetector extends BaseInputMethodDetector implements M
 //        });
 
     }
-    private void check(Editor editor){
+    protected void check(Editor editor){
         CursorState newCursorState;
         if (ISINSERT== false) {
             newCursorState = CursorState.INCODE;

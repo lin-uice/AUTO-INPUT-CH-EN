@@ -1,5 +1,9 @@
 package listener;
 
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.ModalityState;
+import com.intellij.openapi.command.WriteCommandAction;
+import com.intellij.psi.PsiDocumentManager;
 import enums.CursorState;
 import inputmethod.InputMethodChecker;
 import com.intellij.openapi.application.ApplicationActivationListener;
@@ -8,7 +12,6 @@ import com.intellij.openapi.editor.event.*;
 import com.intellij.openapi.wm.IdeFrame;
 import org.jetbrains.annotations.NotNull;
 import utils.CommentUtils;
-
 
 public class BaseInputMethodDetector implements CaretListener,  ApplicationActivationListener {
     //
@@ -33,25 +36,14 @@ public class BaseInputMethodDetector implements CaretListener,  ApplicationActiv
 
 
     protected void checkAndPrint(Editor editor) {
+        ApplicationManager.getApplication().invokeLater(() -> {
+            WriteCommandAction.runWriteCommandAction(editor.getProject(), () -> {
+                PsiDocumentManager.getInstance(editor.getProject()).commitAllDocuments();
+                check( editor);
+            });
 
-        CursorState newCursorState;
-        boolean commentType = CommentUtils.isInComment(editor);
-        if (commentType) {
-            newCursorState = CursorState.INCOMMENT;
-        } else {
-            newCursorState = CursorState.INCODE;
-        }
-        if (newCursorState.equals(cursorState)) {
-            //不做任何操作
+        }, ModalityState.defaultModalityState());
 
-        } else {
-            cursorState = newCursorState;
-            if (cursorState.getLanguage().equals(InputMethodChecker.getCurrentMode())) {//如果状态相等,就不需要进行切换输入法.
-
-            } else {
-                InputMethodChecker.pressShift();
-            }
-        }
     }
 
 
@@ -96,6 +88,26 @@ public class BaseInputMethodDetector implements CaretListener,  ApplicationActiv
 
             }
 //
+        }
+    }
+    protected void check(Editor editor){
+        CursorState newCursorState;
+        boolean commentType = CommentUtils.isInComment(editor);
+        if (commentType) {
+            newCursorState = CursorState.INCOMMENT;
+        } else {
+            newCursorState = CursorState.INCODE;
+        }
+        if (newCursorState.equals(cursorState)) {
+            //不做任何操作
+
+        } else {
+            cursorState = newCursorState;
+            if (cursorState.getLanguage().equals(InputMethodChecker.getCurrentMode())) {//如果状态相等,就不需要进行切换输入法.
+
+            } else {
+                InputMethodChecker.pressShift();
+            }
         }
     }
 
