@@ -46,9 +46,9 @@
     <depends>com.intellij.modules.platform</depends>
     <depends>com.intellij.modules.lang</depends>
 
-    <depends optional="true" config-file="./idea-vim-extension.xml">IdeaVIM</depends>
+    <depends optional="true" config-file="idea-vim-extension.xml">IdeaVIM</depends>
     <extensions defaultExtensionNs="com.intellij">
-        <editorFactoryListener implementation="InputMethodPlugin"/>
+        <editorFactoryListener implementation="starter.InputMethodPlugin"/>
     </extensions>
 
 

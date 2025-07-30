@@ -82,7 +82,7 @@ public class BaseInputMethodDetector implements CaretListener,  ApplicationActiv
     public void chekOutEditor() {
         try {
             Thread.sleep(10);
-        } catch (InterruptedException e) {
+        } catch(InterruptedException e) {
         }
         if (OUTIDEA == false && OUTEDITOR) {
 
