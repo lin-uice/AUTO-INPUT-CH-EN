@@ -10,7 +10,8 @@ import com.maddyhome.idea.vim.common.ModeChangeListener;
 import com.maddyhome.idea.vim.newapi.IjVimEditorKt;
 import com.maddyhome.idea.vim.state.mode.Mode;
 import enums.CursorState;
-import inputmethod.InputMethodChecker;
+import inputmethod.InputMethodChecker1.InputMethodChecker;
+import inputmethod.InputMethodSwitcher;
 import org.jetbrains.annotations.NotNull;
 import utils.CommentUtils;
 
@@ -53,9 +54,10 @@ public class VimInputMethodDetector extends BaseInputMethodDetector implements M
 //        });
 
     }
+    @Override
     protected void check(Editor editor){
         CursorState newCursorState;
-        if (ISINSERT== false) {
+        if (!ISINSERT) {
             newCursorState = CursorState.INCODE;
         } else {
             boolean commentType = CommentUtils.isInComment(editor);
@@ -74,7 +76,7 @@ public class VimInputMethodDetector extends BaseInputMethodDetector implements M
             if (cursorState.getLanguage().equals(InputMethodChecker.getCurrentMode())) {//如果状态相等,就不需要进行切换输入法.
 
             } else {
-                InputMethodChecker.pressShift();
+                InputMethodSwitcher.change();
             }
         }
     }

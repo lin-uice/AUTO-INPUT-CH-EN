@@ -1,4 +1,4 @@
-package inputmethod;
+package inputmethod.InputMethodChecker1;
 
 import enums.InputState;
 
@@ -8,13 +8,14 @@ import com.sun.jna.Pointer;
 import com.sun.jna.platform.win32.WinDef.HWND;
 import com.sun.jna.win32.StdCallLibrary;
 import com.sun.jna.win32.W32APIOptions;
+import inputmethod.InputMethodSwitchStrategy;
 
 
 import static com.sun.jna.platform.win32.WinUser.KEYBDINPUT.KEYEVENTF_KEYUP;
 import static com.sun.jna.platform.win32.WinUser.VK_LSHIFT;
 
 //支持搜狗，微软，百度输入法
-public class InputMethodChecker {
+public class InputMethodChecker implements InputMethodSwitchStrategy {
     //这部分难以重构.因为不是spring框架,因此重构之后,反而会影响性能
     private static long lastPressTime = 0;
     private static final long MIN_PRESS_INTERVAL_MS = 100; // 设置最小间隔为500毫秒
@@ -139,6 +140,12 @@ public class InputMethodChecker {
         System.out.println("释放 Shift");
         lastPressTime = now;
 
+    }
+
+
+    @Override
+    public void change() {
+        pressShift();
     }
 
 
