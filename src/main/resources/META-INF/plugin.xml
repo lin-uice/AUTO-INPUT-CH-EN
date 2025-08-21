@@ -48,8 +48,14 @@
 
     <depends optional="true" config-file="idea-vim-extension.xml">IdeaVIM</depends>
     <extensions defaultExtensionNs="com.intellij">
-        <editorFactoryListener implementation="starter.InputMethodPlugin"/>
+        <!-- 应用级配置 -->
+        <applicationService serviceImplementation="view.SettingsState"/>
+        <!-- 注册到设置页面 -->
+        <applicationConfigurable
+                groupId="tools"
+                instance="view.PluginSettingsConfigurable"
+                displayName="AUTO-INPUT-CH-E"
+                id="myPlugin.settings"/>
     </extensions>
-
 
 </idea-plugin>

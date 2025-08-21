@@ -5,11 +5,12 @@ import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.psi.PsiDocumentManager;
 import enums.CursorState;
-import inputmethod.InputMethodChecker;
+import inputmethod.InputMethodChecker1.InputMethodChecker;
 import com.intellij.openapi.application.ApplicationActivationListener;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.event.*;
 import com.intellij.openapi.wm.IdeFrame;
+import inputmethod.InputMethodSwitcher;
 import org.jetbrains.annotations.NotNull;
 import utils.CommentUtils;
 
@@ -64,7 +65,7 @@ public class BaseInputMethodDetector implements CaretListener,  ApplicationActiv
         if (!cursorState.equals(newCursorState)) {
             cursorState = newCursorState;
             if (!cursorState.getLanguage().equals(InputMethodChecker.getCurrentMode())) {
-                InputMethodChecker.pressShift();
+                InputMethodSwitcher.change();
             }
 
         }
@@ -74,16 +75,16 @@ public class BaseInputMethodDetector implements CaretListener,  ApplicationActiv
     public void chekOutEditor() {
         try {
             Thread.sleep(10);
-        } catch(InterruptedException e) {
+        } catch(InterruptedException ignored) {
         }
-        if (OUTIDEA == false && OUTEDITOR) {
+        if (!OUTIDEA && OUTEDITOR) {
 
             System.out.println("当前在IDE内,但是在editor外");
             CursorState newCursorState = CursorState.INCODE;
             if (!cursorState.equals(newCursorState)) {
                 cursorState = newCursorState;
                 if (!cursorState.getLanguage().equals(InputMethodChecker.getCurrentMode())) {
-                    InputMethodChecker.pressShift();
+                    InputMethodSwitcher.change();
                 }
 
             }
@@ -106,7 +107,7 @@ public class BaseInputMethodDetector implements CaretListener,  ApplicationActiv
             if (cursorState.getLanguage().equals(InputMethodChecker.getCurrentMode())) {//如果状态相等,就不需要进行切换输入法.
 
             } else {
-                InputMethodChecker.pressShift();
+                InputMethodSwitcher.change();
             }
         }
     }

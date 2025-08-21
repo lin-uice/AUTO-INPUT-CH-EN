@@ -11,6 +11,8 @@ group = "cn.mumukehao"
 version = "1.0.3"
 
 repositories {
+    maven { url = uri("https://maven.aliyun.com/repository/public") }
+    google()
     mavenCentral()
     intellijPlatform {
         defaultRepositories()
@@ -21,6 +23,10 @@ val platformPlugins: String by project
 // Configure Gradle IntelliJ Plugin
 dependencies {
     implementation("com.maddyhome.idea:ideavim:2.22.0")
+    implementation("com.github.mmarquee:ui-automation:0.7.0") {
+        exclude(group = "net.java.dev.jna",module= "jna")
+        exclude(group = "net.java.dev.jna",module= "jna-platform")
+    }
 //    implementation("net.java.dev.jna:jna:5.17.0")
 //    implementation("net.java.dev.jna:jna-platform:5.17.0")
 
