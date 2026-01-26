@@ -2,8 +2,8 @@ package listener;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDocumentManager;
 import com.maddyhome.idea.vim.api.VimEditor;
 import com.maddyhome.idea.vim.common.ModeChangeListener;
@@ -42,10 +42,19 @@ public class VimInputMethodDetector extends BaseInputMethodDetector implements M
         if (editor == null || editor.getSelectionModel().hasSelection()) {
             return;
         }
+        Project project = editor.getProject();
+        if (project == null || project.isDisposed()) {
+            return;
+        }
         ApplicationManager.getApplication().invokeLater(() -> {
-            WriteCommandAction.runWriteCommandAction(editor.getProject(), () -> {
-                PsiDocumentManager.getInstance(editor.getProject()).commitAllDocuments();
-                check( editor);
+            if (project.isDisposed()) {
+                return;
+            }
+            ApplicationManager.getApplication().runWriteAction(() -> {
+                PsiDocumentManager.getInstance(project).commitDocument(editor.getDocument());
+            });
+            ApplicationManager.getApplication().runReadAction(() -> {
+                check(editor);
             });
 
         }, ModalityState.defaultModalityState());

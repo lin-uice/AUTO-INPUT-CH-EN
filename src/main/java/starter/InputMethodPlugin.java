@@ -24,7 +24,7 @@ public class InputMethodPlugin implements EditorFactoryListener {
             Editor editor = event.getEditor();
             Project project = editor.getProject();
             System.out.println("现在无vim模式");
-            BaseInputMethodDetector listener = new BaseInputMethodDetector();
+            BaseInputMethodDetector listener = StarterUtils.getBaseDetector(project);
             starterUtils.baseMethodFactory(editor, project, listener);
         }
 

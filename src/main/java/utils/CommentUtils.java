@@ -19,6 +19,9 @@ public class CommentUtils {
         }
 
         Project project = editor.getProject();
+        if (project == null || project.isDisposed()) {
+            return false;
+        }
 //        if (project == null) {
 //            System.out.println("project is null");
 //            return false;
