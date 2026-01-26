@@ -39,6 +39,9 @@ public class VimInputMethodDetector extends BaseInputMethodDetector implements M
     }
     @Override
     protected void checkAndPrint(Editor editor) {
+        if (editor == null || editor.getSelectionModel().hasSelection()) {
+            return;
+        }
         ApplicationManager.getApplication().invokeLater(() -> {
             WriteCommandAction.runWriteCommandAction(editor.getProject(), () -> {
                 PsiDocumentManager.getInstance(editor.getProject()).commitAllDocuments();

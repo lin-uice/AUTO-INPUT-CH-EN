@@ -27,7 +27,11 @@ public class BaseInputMethodDetector implements CaretListener,  ApplicationActiv
 
     @Override
     public void caretPositionChanged(@NotNull CaretEvent e) {
-        checkAndPrint(e.getEditor());
+        Editor editor = e.getEditor();
+        if (editor.getSelectionModel().hasSelection()) {
+            return;
+        }
+        checkAndPrint(editor);
     }
 
 
@@ -36,6 +40,9 @@ public class BaseInputMethodDetector implements CaretListener,  ApplicationActiv
 
 
     protected void checkAndPrint(Editor editor) {
+        if (editor == null || editor.getSelectionModel().hasSelection()) {
+            return;
+        }
         ApplicationManager.getApplication().invokeLater(() -> {
             WriteCommandAction.runWriteCommandAction(editor.getProject(), () -> {
                 PsiDocumentManager.getInstance(editor.getProject()).commitAllDocuments();
