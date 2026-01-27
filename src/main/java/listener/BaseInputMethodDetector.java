@@ -2,9 +2,11 @@ package listener;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
+import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDocumentManager;
 import enums.CursorState;
+import enums.InputState;
 import inputmethod.InputMethodChecker;
 import com.intellij.openapi.application.ApplicationActivationListener;
 import com.intellij.openapi.editor.Editor;
@@ -12,6 +14,7 @@ import com.intellij.openapi.editor.event.*;
 import com.intellij.openapi.wm.IdeFrame;
 import org.jetbrains.annotations.NotNull;
 import utils.CommentUtils;
+import utils.InputMethodBubble;
 
 public class BaseInputMethodDetector implements CaretListener,  ApplicationActivationListener {
     //
@@ -79,15 +82,17 @@ public class BaseInputMethodDetector implements CaretListener,  ApplicationActiv
         System.out.println("现在光标状态为：" + newCursorState);
         if (!cursorState.equals(newCursorState)) {
             cursorState = newCursorState;
-            if (!cursorState.getLanguage().equals(InputMethodChecker.getCurrentMode())) {
-                InputMethodChecker.pressShift();
+            Editor editor = null;
+            if (ideFrame != null && ideFrame.getProject() != null) {
+                editor = FileEditorManager.getInstance(ideFrame.getProject()).getSelectedTextEditor();
             }
+            switchToIfNeeded(editor, cursorState.getLanguage(), ideFrame);
 
         }
 
     }
 
-    public void chekOutEditor() {
+    public void chekOutEditor(Editor editor) {
         try {
             Thread.sleep(10);
         } catch(InterruptedException e) {
@@ -98,9 +103,7 @@ public class BaseInputMethodDetector implements CaretListener,  ApplicationActiv
             CursorState newCursorState = CursorState.INCODE;
             if (!cursorState.equals(newCursorState)) {
                 cursorState = newCursorState;
-                if (!cursorState.getLanguage().equals(InputMethodChecker.getCurrentMode())) {
-                    InputMethodChecker.pressShift();
-                }
+                switchToIfNeeded(editor, cursorState.getLanguage(), null);
 
             }
 //
@@ -111,6 +114,8 @@ public class BaseInputMethodDetector implements CaretListener,  ApplicationActiv
         boolean commentType = CommentUtils.isInComment(editor);
         if (commentType) {
             newCursorState = CursorState.INCOMMENT;
+        } else if (CommentUtils.isInChineseString(editor)) {
+            newCursorState = CursorState.INSTRING;
         } else {
             newCursorState = CursorState.INCODE;
         }
@@ -119,11 +124,22 @@ public class BaseInputMethodDetector implements CaretListener,  ApplicationActiv
 
         } else {
             cursorState = newCursorState;
-            if (cursorState.getLanguage().equals(InputMethodChecker.getCurrentMode())) {//如果状态相等,就不需要进行切换输入法.
+            switchToIfNeeded(editor, cursorState.getLanguage(), null);
+        }
+    }
 
-            } else {
-                InputMethodChecker.pressShift();
-            }
+    protected void switchToIfNeeded(Editor editor, InputState target, IdeFrame fallbackFrame) {
+        InputState from = InputMethodChecker.getCurrentMode();
+        if (from == target) {
+            return;
+        }
+        InputMethodChecker.pressShift();
+        if (editor != null) {
+            InputMethodBubble.show(editor, from, target);
+            return;
+        }
+        if (fallbackFrame != null && fallbackFrame.getComponent() != null) {
+            InputMethodBubble.show(fallbackFrame.getComponent(), from, target);
         }
     }
 

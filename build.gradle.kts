@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "cn.mumukehao"
-version = "1.0.4"
+version = "1.1.0"
 
 repositories {
     mavenCentral()
@@ -47,7 +47,7 @@ intellijPlatform {
         }
 
         changeNotes = """
-                 <h2>Version 1.0.4</h2>
+                 <h2>Version 1.1.0</h2>
             <ul>
                 <li>⚡ 优化代码逻辑，提升插件响应速度 (Optimized code logic for faster response)</li>
                 <li>🔄 重构源码，精简插件大小 (Refactored source code to reduce plugin size)</li>

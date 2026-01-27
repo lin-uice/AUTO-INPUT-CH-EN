@@ -69,7 +69,7 @@ public class StarterUtils {
             } else {
                 System.out.println("失去了注意");
                 BaseInputMethodDetector.OUTEDITOR = true;
-                listener.chekOutEditor();
+                listener.chekOutEditor(editor);
             }
         });
     }

@@ -68,6 +68,66 @@ public class CommentUtils {
         return false;
     }
 
+    public static boolean isInChineseString(Editor editor) {
+        if (editor == null) {
+            return false;
+        }
+        Project project = editor.getProject();
+        if (project == null || project.isDisposed()) {
+            return false;
+        }
+        PsiDocumentManager manager = PsiDocumentManager.getInstance(project);
+        PsiFile psiFile = manager.getPsiFile(editor.getDocument());
+        if (psiFile == null) {
+            return false;
+        }
+        int offset = editor.getCaretModel().getOffset();
+        PsiElement element = getElementAtOffset(psiFile, offset);
+        if (element == null) {
+            return false;
+        }
+        PsiElement current = element;
+        for (int i = 0; i < 8 && current != null; i++) {
+            String text = current.getText();
+            if (looksLikeStringLiteral(current, text) && containsCjk(text)) {
+                return true;
+            }
+            current = current.getParent();
+        }
+        return false;
+    }
+
+    private static boolean looksLikeStringLiteral(PsiElement element, String text) {
+        if (text == null || text.isEmpty()) {
+            return false;
+        }
+        String trimmed = text.trim();
+        if (trimmed.length() < 2) {
+            return false;
+        }
+        char first = trimmed.charAt(0);
+        char last = trimmed.charAt(trimmed.length() - 1);
+        boolean hasQuotes = (first == '"' && last == '"') || (first == '\'' && last == '\'') || (first == '`' && last == '`');
+        if (hasQuotes) {
+            return true;
+        }
+        String name = element.getClass().getSimpleName();
+        return name.contains("String") && name.contains("Literal");
+    }
+
+    private static boolean containsCjk(String text) {
+        if (text == null || text.isEmpty()) {
+            return false;
+        }
+        for (int i = 0; i < text.length(); i++) {
+            Character.UnicodeScript script = Character.UnicodeScript.of(text.charAt(i));
+            if (script == Character.UnicodeScript.HAN) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /**
      * 获取指定偏移量处的元素，处理边界情况
      */

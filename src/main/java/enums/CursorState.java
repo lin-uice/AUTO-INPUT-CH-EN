@@ -3,6 +3,7 @@ package enums;
 public enum CursorState {
    OUTIDE("OUTSIDE",InputState.CHINESE),//在IDE外
     INCOMMENT("INCOMMENT",InputState.CHINESE),//在注释中
+    INSTRING("INSTRING",InputState.CHINESE),
     INCODE("INCODE",InputState.ENGLISH);//在代码中
     private final String Code;
     private final InputState Language;
