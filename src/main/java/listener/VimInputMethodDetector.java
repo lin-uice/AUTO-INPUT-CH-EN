@@ -2,15 +2,14 @@ package listener;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDocumentManager;
 import com.maddyhome.idea.vim.api.VimEditor;
 import com.maddyhome.idea.vim.common.ModeChangeListener;
 import com.maddyhome.idea.vim.newapi.IjVimEditorKt;
 import com.maddyhome.idea.vim.state.mode.Mode;
 import enums.CursorState;
-import inputmethod.InputMethodChecker;
 import org.jetbrains.annotations.NotNull;
 import utils.CommentUtils;
 
@@ -39,10 +38,22 @@ public class VimInputMethodDetector extends BaseInputMethodDetector implements M
     }
     @Override
     protected void checkAndPrint(Editor editor) {
+        if (editor == null || editor.getSelectionModel().hasSelection()) {
+            return;
+        }
+        Project project = editor.getProject();
+        if (project == null || project.isDisposed()) {
+            return;
+        }
         ApplicationManager.getApplication().invokeLater(() -> {
-            WriteCommandAction.runWriteCommandAction(editor.getProject(), () -> {
-                PsiDocumentManager.getInstance(editor.getProject()).commitAllDocuments();
-                check( editor);
+            if (project.isDisposed()) {
+                return;
+            }
+            ApplicationManager.getApplication().runWriteAction(() -> {
+                PsiDocumentManager.getInstance(project).commitDocument(editor.getDocument());
+            });
+            ApplicationManager.getApplication().runReadAction(() -> {
+                check(editor);
             });
 
         }, ModalityState.defaultModalityState());
@@ -61,6 +72,8 @@ public class VimInputMethodDetector extends BaseInputMethodDetector implements M
             boolean commentType = CommentUtils.isInComment(editor);
             if (commentType) {
                 newCursorState = CursorState.INCOMMENT;
+            } else if (CommentUtils.isInChineseString(editor)) {
+                newCursorState = CursorState.INSTRING;
             } else {
                 newCursorState = CursorState.INCODE;
             }
@@ -71,11 +84,7 @@ public class VimInputMethodDetector extends BaseInputMethodDetector implements M
             //不做任何操作
         } else {
             cursorState = newCursorState;
-            if (cursorState.getLanguage().equals(InputMethodChecker.getCurrentMode())) {//如果状态相等,就不需要进行切换输入法.
-
-            } else {
-                InputMethodChecker.pressShift();
-            }
+            switchToIfNeeded(editor, cursorState.getLanguage(), null);
         }
     }
 }
